@@ -62,28 +62,28 @@
 		8E37CC132D19FE8200B67AD6 /* Micrograd */ = {
 			isa = PBXGroup;
 			children = (
-				8E37CC142D19FE8200B67AD6 /* main.c */,
 				8E37CC1B2D1A009700B67AD6 /* Makefile */,
-				8E37CC212D1A11C000B67AD6 /* scr */,
+				8E37CC142D19FE8200B67AD6 /* main.c */,
+				8E37CC212D1A11C000B67AD6 /* src */,
+				8E37CC222D1A130600B67AD6 /* tests */,
 			);
 			path = Micrograd;
 			sourceTree = "<group>";
 		};
-		8E37CC1D2D1A0AA400B67AD6 /* value */ = {
+		8E37CC212D1A11C000B67AD6 /* src */ = {
 			isa = PBXGroup;
 			children = (
 				8E37CC1E2D1A0AAE00B67AD6 /* value.h */,
 				8E37CC1F2D1A0AAE00B67AD6 /* value.c */,
 			);
-			path = value;
+			path = src;
 			sourceTree = "<group>";
 		};
-		8E37CC212D1A11C000B67AD6 /* scr */ = {
+		8E37CC222D1A130600B67AD6 /* tests */ = {
 			isa = PBXGroup;
 			children = (
-				8E37CC1D2D1A0AA400B67AD6 /* value */,
 			);
-			path = scr;
+			path = tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
