@@ -10,6 +10,7 @@
 		8E37CC152D19FE8200B67AD6 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC142D19FE8200B67AD6 /* main.c */; };
 		8E37CC1C2D1A009700B67AD6 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC1B2D1A009700B67AD6 /* Makefile */; };
 		8E37CC202D1A0AAE00B67AD6 /* value.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC1F2D1A0AAE00B67AD6 /* value.c */; };
+		8E37CC252D1A1A6A00B67AD6 /* test_runner.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC242D1A1A6A00B67AD6 /* test_runner.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +31,8 @@
 		8E37CC1B2D1A009700B67AD6 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		8E37CC1E2D1A0AAE00B67AD6 /* value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = value.h; sourceTree = "<group>"; };
 		8E37CC1F2D1A0AAE00B67AD6 /* value.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = value.c; sourceTree = "<group>"; };
+		8E37CC232D1A1A6A00B67AD6 /* test_runner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_runner.h; sourceTree = "<group>"; };
+		8E37CC242D1A1A6A00B67AD6 /* test_runner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test_runner.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +68,7 @@
 				8E37CC1B2D1A009700B67AD6 /* Makefile */,
 				8E37CC142D19FE8200B67AD6 /* main.c */,
 				8E37CC212D1A11C000B67AD6 /* src */,
-				8E37CC222D1A130600B67AD6 /* tests */,
+				8E37CC222D1A130600B67AD6 /* test */,
 			);
 			path = Micrograd;
 			sourceTree = "<group>";
@@ -79,11 +82,13 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		8E37CC222D1A130600B67AD6 /* tests */ = {
+		8E37CC222D1A130600B67AD6 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				8E37CC232D1A1A6A00B67AD6 /* test_runner.h */,
+				8E37CC242D1A1A6A00B67AD6 /* test_runner.c */,
 			);
-			path = tests;
+			path = test;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,6 +151,7 @@
 				8E37CC202D1A0AAE00B67AD6 /* value.c in Sources */,
 				8E37CC1C2D1A009700B67AD6 /* Makefile in Sources */,
 				8E37CC152D19FE8200B67AD6 /* main.c in Sources */,
+				8E37CC252D1A1A6A00B67AD6 /* test_runner.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
