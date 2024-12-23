@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8E37CC152D19FE8200B67AD6 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC142D19FE8200B67AD6 /* main.c */; };
+		8E37CC1C2D1A009700B67AD6 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC1B2D1A009700B67AD6 /* Makefile */; };
+		8E37CC202D1A0AAE00B67AD6 /* value.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC1F2D1A0AAE00B67AD6 /* value.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,9 @@
 /* Begin PBXFileReference section */
 		8E37CC112D19FE8200B67AD6 /* Micrograd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Micrograd; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E37CC142D19FE8200B67AD6 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		8E37CC1B2D1A009700B67AD6 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		8E37CC1E2D1A0AAE00B67AD6 /* value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = value.h; sourceTree = "<group>"; };
+		8E37CC1F2D1A0AAE00B67AD6 /* value.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = value.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +63,27 @@
 			isa = PBXGroup;
 			children = (
 				8E37CC142D19FE8200B67AD6 /* main.c */,
+				8E37CC1B2D1A009700B67AD6 /* Makefile */,
+				8E37CC212D1A11C000B67AD6 /* scr */,
 			);
 			path = Micrograd;
+			sourceTree = "<group>";
+		};
+		8E37CC1D2D1A0AA400B67AD6 /* value */ = {
+			isa = PBXGroup;
+			children = (
+				8E37CC1E2D1A0AAE00B67AD6 /* value.h */,
+				8E37CC1F2D1A0AAE00B67AD6 /* value.c */,
+			);
+			path = value;
+			sourceTree = "<group>";
+		};
+		8E37CC212D1A11C000B67AD6 /* scr */ = {
+			isa = PBXGroup;
+			children = (
+				8E37CC1D2D1A0AA400B67AD6 /* value */,
+			);
+			path = scr;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +143,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E37CC202D1A0AAE00B67AD6 /* value.c in Sources */,
+				8E37CC1C2D1A009700B67AD6 /* Makefile in Sources */,
 				8E37CC152D19FE8200B67AD6 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,14 +1,9 @@
-//
-//  main.c
-//  Micrograd
-//
-//  Created by Kamil on 23.12.2024.
-//
-
 #include <stdio.h>
+#include "value.h"
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
     printf("Hello, World!\n");
+    Value* v = value_create(50.0);
+    value_print(v);
     return 0;
 }
