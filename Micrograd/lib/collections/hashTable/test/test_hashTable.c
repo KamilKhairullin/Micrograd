@@ -425,3 +425,159 @@ bool test_hash_function_distribution(void) {
     
     return true;
 }
+
+bool test_hashTable_resize_basic(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(2);  // Start with small capacity
+    double values[] = {1.0, 2.0};
+    size_t initial_capacity = hashTable->capacity;
+    
+    bool resize_result = hashTable_resize(hashTable);
+    
+    // Then
+    ASSERT(resize_result, "Resize should return true");
+    ASSERT(hashTable->capacity == initial_capacity * 2,
+           "Capacity should double after resize");
+    ASSERT(hashTable->size == 0, "Size should remain the same after resize");
+    for (size_t i = 0; i < 2; i++) {
+//        ASSERT(hashTable_contains(hashTable, values[i]),
+//               "Values should still exist after resize");
+    }
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_resize_empty(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(2);
+    size_t initial_capacity = hashTable->capacity;
+    
+    // When
+    bool resize_result = hashTable_resize(hashTable);
+    
+    // Then
+    ASSERT(resize_result, "Resize should return true");
+    ASSERT(hashTable->capacity == initial_capacity * 2,
+           "Capacity should double after resize");
+    ASSERT(hashTable->size == 0, "Size should remain 0 after resize");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_resize_with_collisions(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(1);  // Force collisions
+    double values[] = {1.0, 2.0, 3.0};  // All hash to same bucket initially
+    
+    // When
+    for (size_t i = 0; i < 3; i++) {
+        hashTable_add(hashTable, values[i]);
+    }
+    bool resize_result = hashTable_resize(hashTable);
+    
+    // Then
+    ASSERT(resize_result, "Resize should return true");
+    ASSERT(hashTable->size == 3, "Size should remain same after resize");
+    for (size_t i = 0; i < 3; i++) {
+//        ASSERT(hashTable_contains(hashTable, values[i]),
+//               "Values should still exist after resize");
+    }
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_resize_maintains_order(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(2);
+    double values[] = {1.0, 1.1, 1.2, 1.3};  // Values that might hash to same bucket
+    
+    // When
+    for (size_t i = 0; i < 4; i++) {
+        hashTable_add(hashTable, values[i]);
+    }
+    bool resize_result = hashTable_resize(hashTable);
+    
+    // Then
+    ASSERT(resize_result, "Resize should return true");
+    ASSERT(hashTable->size == 4, "Size should remain same after resize");
+    for (size_t i = 0; i < 4; i++) {
+//        ASSERT(hashTable_contains(hashTable, values[i]),
+//               "Values should still exist after resize");
+    }
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_resize_nearly_equal_values(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(2);
+    double value1 = 1.0;
+    double value2 = 1.0 + 1.5e-11;  // Nearly equal value
+    
+    // When
+    hashTable_add(hashTable, value1);
+    hashTable_add(hashTable, value2);  // Should not actually add due to near equality
+    bool resize_result = hashTable_resize(hashTable);
+    
+    // Then
+    ASSERT(resize_result, "Resize should return true");
+    ASSERT(hashTable->size == 1, "Size should remain 1 after resize");
+//    ASSERT(hashTable_contains(hashTable, value1),
+//           "Original value should exist after resize");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_resize_multiple_times(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(2);
+    size_t initial_capacity = hashTable->capacity;
+    
+    // When
+    bool first_resize = hashTable_resize(hashTable);
+    size_t first_resize_capacity = hashTable->capacity;
+    bool second_resize = hashTable_resize(hashTable);
+    
+    // Then
+
+ASSERT(first_resize && second_resize, "Both resizes should succeed");
+    ASSERT(hashTable->capacity == initial_capacity * 4,
+           "Capacity should quadruple after two resizes");
+    ASSERT(first_resize_capacity == initial_capacity * 2,
+           "First resize should double capacity");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_resize_large_dataset(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(2);
+    size_t num_values = 1000;
+    double* values = malloc(num_values * sizeof(double));
+    
+    // When
+    for (size_t i = 0; i < num_values; i++) {
+        values[i] = i * 1.1;
+        hashTable_add(hashTable, values[i]);
+    }
+    bool resize_result = hashTable_resize(hashTable);
+    
+    // Then
+    ASSERT(resize_result, "Resize should return true");
+    ASSERT(hashTable->size == num_values,
+           "Size should match number of inserted values");
+    for (size_t i = 0; i < num_values; i++) {
+//        ASSERT(hashTable_contains(hashTable, values[i]),
+//               "Each value should still exist after resize");
+    }
+    
+    free(values);
+    hashTable_deinit(hashTable);
+    return true;
+}

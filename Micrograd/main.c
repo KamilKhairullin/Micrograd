@@ -10,20 +10,10 @@ int main(void) {
     value_print(value_add(value_mul(a, b), c));
     
     HashTable* hashTable = hashTable_init();
-    hashTable_add(hashTable, 1);
-    hashTable_add(hashTable, 2);
-    hashTable_add(hashTable, 3);
-    hashTable_add(hashTable, 4);
-    hashTable_add(hashTable, 5);
-    hashTable_add(hashTable, 6);
-    hashTable_add(hashTable, 7);
-    hashTable_add(hashTable, 8);
-    hashTable_add(hashTable, 9);
-//    hashTable_add(hashTable, 10);
-    hashTable_add(hashTable, 11);
-    hashTable_add(hashTable, 12);
-    hashTable_add(hashTable, 13);
-    hashTable_add(hashTable, 14);
+    
+    for (size_t i = 0; i < 1000; i++) {
+        hashTable_add(hashTable, i);
+    }
 
     hashTable_print(hashTable);
     return 0;

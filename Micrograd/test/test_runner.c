@@ -6,7 +6,7 @@ void run_hashTable_tests(TestStats* stats) {
     RUN_TEST(test_hashTable_init_alt_success, stats);
     RUN_TEST(test_hashTable_init_alt_zero_capacity, stats);
     RUN_TEST(test_hashTable_init_alt_large_capacity, stats);
-
+    
     RUN_TEST(test_hashTable_init_buckets_initialized_to_null, stats);
     RUN_TEST(test_hashTable_init_alt_buckets_initialized_to_null, stats);
     RUN_TEST(test_hashTable_init_multiple_instances, stats);
@@ -14,7 +14,7 @@ void run_hashTable_tests(TestStats* stats) {
     RUN_TEST(test_hashTable_init_alt_very_small_capacity, stats);
     RUN_TEST(test_hashTable_init_memory_alignment, stats);
     RUN_TEST(test_hashTable_init_alt_max_size_minus_one, stats);
-
+    
     RUN_TEST(test_hashTable_add_single_value, stats);
     RUN_TEST(test_hashTable_add_multiple_values, stats);
     RUN_TEST(test_hashTable_add_duplicate_value, stats);
@@ -28,6 +28,14 @@ void run_hashTable_tests(TestStats* stats) {
     RUN_TEST(test_hash_function_different_values, stats);
     RUN_TEST(test_hash_function_edge_cases, stats);
     RUN_TEST(test_hash_function_distribution, stats);
+    
+    RUN_TEST(test_hashTable_resize_basic, stats);
+    RUN_TEST(test_hashTable_resize_empty, stats);
+    RUN_TEST(test_hashTable_resize_with_collisions, stats);
+    RUN_TEST(test_hashTable_resize_maintains_order, stats);
+    RUN_TEST(test_hashTable_resize_nearly_equal_values, stats);
+    RUN_TEST(test_hashTable_resize_multiple_times, stats);
+    RUN_TEST(test_hashTable_resize_large_dataset, stats);
 }
 
 void run_tests(TestStats* stats) {

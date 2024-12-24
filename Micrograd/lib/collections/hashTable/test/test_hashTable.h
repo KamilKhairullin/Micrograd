@@ -30,4 +30,12 @@ bool test_hash_function_nearly_equal_values(void);
 bool test_hash_function_different_values(void);
 bool test_hash_function_edge_cases(void);
 bool test_hash_function_distribution(void);
+
+bool test_hashTable_resize_basic(void);
+bool test_hashTable_resize_empty(void);
+bool test_hashTable_resize_with_collisions(void);
+bool test_hashTable_resize_maintains_order(void);
+bool test_hashTable_resize_nearly_equal_values(void);
+bool test_hashTable_resize_multiple_times(void);
+bool test_hashTable_resize_large_dataset(void);
 #endif
