@@ -36,6 +36,15 @@ void run_hashTable_tests(TestStats* stats) {
     RUN_TEST(test_hashTable_resize_nearly_equal_values, stats);
     RUN_TEST(test_hashTable_resize_multiple_times, stats);
     RUN_TEST(test_hashTable_resize_large_dataset, stats);
+    
+    RUN_TEST(test_hashTable_contains_single_value, stats);
+    RUN_TEST(test_hashTable_contains_null_table, stats);
+    RUN_TEST(test_hashTable_contains_nearly_equal_values, stats);
+    RUN_TEST(test_hashTable_contains_after_collision, stats);
+    RUN_TEST(test_hashTable_contains_empty_table, stats);
+    RUN_TEST(test_hashTable_contains_after_resize, stats);
+    RUN_TEST(test_hashTable_contains_edge_values, stats);
+    RUN_TEST(test_hashTable_contains_very_small_values, stats);
 }
 
 void run_tests(TestStats* stats) {

@@ -11,7 +11,7 @@ int main(void) {
     
     HashTable* hashTable = hashTable_init();
     
-    for (size_t i = 0; i < 1000; i++) {
+    for (size_t i = 0; i < 100; i++) {
         hashTable_add(hashTable, i);
     }
 

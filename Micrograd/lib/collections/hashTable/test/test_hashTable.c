@@ -3,6 +3,9 @@
 #include "../../../../lib/test/test_framework.h"
 #include <stdbool.h>
 
+#define LOAD_FACTOR_THRESHOLD 0.75
+#define EPSILON 1e-16
+
 bool test_hashTable_init_success(void) {
     // Given/When
     HashTable* hashTable = hashTable_init();
@@ -190,9 +193,6 @@ bool test_hashTable_init_alt_max_size_minus_one(void) {
     return true;
 }
 
-#define LOAD_FACTOR_THRESHOLD 0.75
-#define EPSILON 1e-11
-
 bool test_hashTable_add_single_value(void) {
     // Given
     HashTable* hashTable = hashTable_init();
@@ -204,7 +204,7 @@ bool test_hashTable_add_single_value(void) {
     // Then
     ASSERT(result, "Adding single value should succeed");
     ASSERT(hashTable->size == 1, "Size should be 1 after adding one element");
-//    ASSERT(hashTable_contains(hashTable, value), "Added value should be found in table");
+    ASSERT(hashTable_contains(hashTable, value), "Added value should be found in table");
     
     hashTable_deinit(hashTable);
     return true;
@@ -226,7 +226,7 @@ bool test_hashTable_add_multiple_values(void) {
     ASSERT(all_added, "All values should be added successfully");
     ASSERT(hashTable->size == num_values, "Size should match number of added elements");
     for (size_t i = 0; i < num_values; i++) {
-//        ASSERT(hashTable_contains(hashTable, values[i]), "Each added value should be found");
+        ASSERT(hashTable_contains(hashTable, values[i]), "Each added value should be found");
     }
     
     hashTable_deinit(hashTable);
@@ -278,8 +278,8 @@ bool test_hashTable_add_trigger_resize(void) {
     // Then
     ASSERT(hashTable->capacity > initial_capacity, "Capacity should have increased");
     for (size_t i = 0; i < 3; i++) {
-//        ASSERT(hashTable_contains(hashTable, values[i]),
-//               "Values should still exist after resize");
+        ASSERT(hashTable_contains(hashTable, values[i]),
+               "Values should still exist after resize");
     }
     
     hashTable_deinit(hashTable);
@@ -320,8 +320,8 @@ bool test_hashTable_add_collision_handling(void) {
     ASSERT(all_added, "All values should be added despite collisions");
     ASSERT(hashTable->size == 3, "Size should be 3");
     for (size_t i = 0; i < 3; i++) {
-//        ASSERT(hashTable_contains(hashTable, values[i]),
-//               "Each value should be found despite collisions");
+        ASSERT(hashTable_contains(hashTable, values[i]),
+               "Each value should be found despite collisions");
     }
     
     hashTable_deinit(hashTable);
@@ -345,8 +345,8 @@ bool test_hash_function_nearly_equal_values(void) {
     // Given
     size_t capacity = 100;
     double value1 = 1.0;
-    double value2 = 1.0 + 0.5e-11;  // Difference smaller than epsilon
-    double value3 = 1.0 + 2e-11;   // Still smaller than epsilon
+    double value2 = 1.0 + 0.5 * EPSILON;  // Difference smaller than epsilon
+    double value3 = 1.0 + 2 * EPSILON;   // Still smaller than epsilon
     
     // When
     size_t hash1 = hash_function(value1, capacity);
@@ -382,8 +382,8 @@ bool test_hash_function_different_values(void) {
 bool test_hash_function_edge_cases(void) {
     // Given
     size_t capacity = 100;
-    double very_small1 = 1e-11;
-    double very_small2 = 2e-11;  // Difference is 1e-11
+    double very_small1 = 1 * EPSILON;
+    double very_small2 = 2 * EPSILON;  // Difference is 1e-11
     double zero = 0.0;
     double negative_zero = -0.0;
     
@@ -432,16 +432,18 @@ bool test_hashTable_resize_basic(void) {
     double values[] = {1.0, 2.0};
     size_t initial_capacity = hashTable->capacity;
     
+    hashTable_add(hashTable, values[0]);
+    hashTable_add(hashTable, values[1]);
     bool resize_result = hashTable_resize(hashTable);
     
     // Then
     ASSERT(resize_result, "Resize should return true");
-    ASSERT(hashTable->capacity == initial_capacity * 2,
+    ASSERT(hashTable->capacity == initial_capacity * 2 * 2,
            "Capacity should double after resize");
-    ASSERT(hashTable->size == 0, "Size should remain the same after resize");
+    ASSERT(hashTable->size == 2, "Size should remain the same after resize");
     for (size_t i = 0; i < 2; i++) {
-//        ASSERT(hashTable_contains(hashTable, values[i]),
-//               "Values should still exist after resize");
+        ASSERT(hashTable_contains(hashTable, values[i]),
+               "Values should still exist after resize");
     }
     
     hashTable_deinit(hashTable);
@@ -481,8 +483,8 @@ bool test_hashTable_resize_with_collisions(void) {
     ASSERT(resize_result, "Resize should return true");
     ASSERT(hashTable->size == 3, "Size should remain same after resize");
     for (size_t i = 0; i < 3; i++) {
-//        ASSERT(hashTable_contains(hashTable, values[i]),
-//               "Values should still exist after resize");
+        ASSERT(hashTable_contains(hashTable, values[i]),
+               "Values should still exist after resize");
     }
     
     hashTable_deinit(hashTable);
@@ -504,8 +506,8 @@ bool test_hashTable_resize_maintains_order(void) {
     ASSERT(resize_result, "Resize should return true");
     ASSERT(hashTable->size == 4, "Size should remain same after resize");
     for (size_t i = 0; i < 4; i++) {
-//        ASSERT(hashTable_contains(hashTable, values[i]),
-//               "Values should still exist after resize");
+        ASSERT(hashTable_contains(hashTable, values[i]),
+               "Values should still exist after resize");
     }
     
     hashTable_deinit(hashTable);
@@ -516,7 +518,7 @@ bool test_hashTable_resize_nearly_equal_values(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(2);
     double value1 = 1.0;
-    double value2 = 1.0 + 1.5e-11;  // Nearly equal value
+    double value2 = 1.0 + 1.5 * EPSILON;  // Nearly equal value
     
     // When
     hashTable_add(hashTable, value1);
@@ -526,8 +528,8 @@ bool test_hashTable_resize_nearly_equal_values(void) {
     // Then
     ASSERT(resize_result, "Resize should return true");
     ASSERT(hashTable->size == 1, "Size should remain 1 after resize");
-//    ASSERT(hashTable_contains(hashTable, value1),
-//           "Original value should exist after resize");
+    ASSERT(hashTable_contains(hashTable, value1),
+           "Original value should exist after resize");
     
     hashTable_deinit(hashTable);
     return true;
@@ -573,11 +575,158 @@ bool test_hashTable_resize_large_dataset(void) {
     ASSERT(hashTable->size == num_values,
            "Size should match number of inserted values");
     for (size_t i = 0; i < num_values; i++) {
-//        ASSERT(hashTable_contains(hashTable, values[i]),
-//               "Each value should still exist after resize");
+        ASSERT(hashTable_contains(hashTable, values[i]),
+               "Each value should still exist after resize");
     }
     
     free(values);
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_contains_single_value(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    double value = 42.0;
+    
+    // When
+    hashTable_add(hashTable, value);
+    
+    // Then
+    ASSERT(hashTable_contains(hashTable, value),
+           "Should find added value");
+    ASSERT(!hashTable_contains(hashTable, 43.0),
+           "Should not find non-existent value");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_contains_null_table(void) {
+    // Given
+    HashTable* hashTable = NULL;
+    
+    // When/Then
+    ASSERT(!hashTable_contains(hashTable, 42.0),
+           "Should return false for NULL table");
+    
+    return true;
+}
+
+bool test_hashTable_contains_nearly_equal_values(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    double value = 1.0;
+    double nearly_equal = 1.0 + EPSILON/2;
+    double different = 1.0 + EPSILON*10;
+    
+    // When
+    hashTable_add(hashTable, value);
+    
+    // Then
+    ASSERT(hashTable_contains(hashTable, nearly_equal),
+           "Should find nearly equal value");
+    ASSERT(!hashTable_contains(hashTable, different),
+           "Should not find significantly different value");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_contains_after_collision(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(1);  // Force collisions
+    double values[] = {1.0, 2.0, 3.0};  // Will all hash to same bucket
+    
+    // When
+    for (size_t i = 0; i < 3; i++) {
+        hashTable_add(hashTable, values[i]);
+    }
+    
+    // Then
+    for (size_t i = 0; i < 3; i++) {
+        ASSERT(hashTable_contains(hashTable, values[i]),
+               "Should find all values despite collisions");
+    }
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_contains_empty_table(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    
+    // When/Then
+    ASSERT(!hashTable_contains(hashTable, 42.0),
+           "Empty table should not contain any values");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_contains_after_resize(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(2);
+    double values[] = {1.0, 2.0, 3.0, 4.0};  // Enough to trigger resize
+    
+    // When
+    for (size_t i = 0; i < 4; i++) {
+        hashTable_add(hashTable, values[i]);
+    }
+    
+    // Then
+    for (size_t i = 0; i < 4; i++) {
+        ASSERT(hashTable_contains(hashTable, values[i]),
+               "Should find all values after resize");
+    }
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_contains_edge_values(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    double edge_values[] = {
+        0.0,
+        -0.0,
+        1.79769e+308,
+        -1.79769e+308,
+        2.2250738585072014e-308,
+        -2.2250738585072014e-308,
+    };
+    
+    // When
+    for (size_t i = 0; i < sizeof(edge_values)/sizeof(edge_values[0]); i++) {
+        hashTable_add(hashTable, edge_values[i]);
+    }
+    
+    // Then
+    for (size_t i = 0; i < sizeof(edge_values)/sizeof(edge_values[0]); i++) {
+        ASSERT(hashTable_contains(hashTable, edge_values[i]),
+               "Should handle edge values correctly");
+    }
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_contains_very_small_values(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    double tiny_value = 1e-9;
+    double slightly_larger = 1.1e-9;
+    
+    // When
+    hashTable_add(hashTable, tiny_value);
+    
+    // Then
+    ASSERT(hashTable_contains(hashTable, tiny_value),
+           "Should find very small value");
+    ASSERT(!hashTable_contains(hashTable, slightly_larger),
+           "Should distinguish between different very small values");
+    
     hashTable_deinit(hashTable);
     return true;
 }

@@ -6,9 +6,10 @@
 
 #define INITIAL_CAPACITY 16
 #define LOAD_FACTOR_THRESHOLD 0.8
+#define EPSILON 1e-15
 
 size_t hash_function(double value, size_t capacity) {
-    double rounded_value = round(value * 1e10) / 1e10;
+    double rounded_value = round(value * 1e15) / 1e15;
     if (rounded_value == -0) {
         rounded_value = 0;
     }
@@ -112,7 +113,7 @@ bool hashTable_add_to_bucket(Bucket* bucket, double value) {
     // check if value already exists
     Node* iterator = headNode;
     while(iterator != NULL) {
-        if (fabs(iterator->value - value) < 1e-10) {
+        if (fabs(iterator->value - value) < EPSILON) {
             return false;
         }
         iterator = iterator->next;
@@ -126,6 +127,22 @@ bool hashTable_add_to_bucket(Bucket* bucket, double value) {
     bucket->head = newNode;
     return true;
 }
+
+bool hashTable_contains(HashTable* hashTable, double value) {
+    if (hashTable == NULL) return false;
+    size_t index = hash_function(value, hashTable->capacity);
+    Bucket* bucket = &hashTable->buckets[index];
+    Node* iterator = bucket->head;
+    
+    while(iterator != NULL) {
+        if (fabs(iterator->value - value) < EPSILON) {
+            return true;
+        }
+        iterator = iterator->next;
+    }
+    return false;
+}
+
 
 void hashTable_print(HashTable* hashTable) {
     if (hashTable == NULL) {

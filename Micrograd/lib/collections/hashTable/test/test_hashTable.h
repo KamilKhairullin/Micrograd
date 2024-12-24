@@ -38,4 +38,14 @@ bool test_hashTable_resize_maintains_order(void);
 bool test_hashTable_resize_nearly_equal_values(void);
 bool test_hashTable_resize_multiple_times(void);
 bool test_hashTable_resize_large_dataset(void);
+
+bool test_hashTable_contains_single_value(void);
+bool test_hashTable_contains_null_table(void);
+bool test_hashTable_contains_nearly_equal_values(void);
+bool test_hashTable_contains_after_collision(void);
+bool test_hashTable_contains_empty_table(void);
+bool test_hashTable_contains_after_resize(void);
+bool test_hashTable_contains_edge_values(void);
+bool test_hashTable_contains_very_small_values(void);
+
 #endif
