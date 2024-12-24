@@ -2,6 +2,7 @@
 #include "../src/hashTable.h"
 #include "../../../../lib/test/test_framework.h"
 #include <stdbool.h>
+#include "../../../../src/value.h"
 
 #define LOAD_FACTOR_THRESHOLD 0.75
 #define EPSILON 1e-16
@@ -196,7 +197,7 @@ bool test_hashTable_init_alt_max_size_minus_one(void) {
 bool test_hashTable_add_single_value(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double value = 42.0;
+    Value* value = value_create(42.0);
     
     // When
     bool result = hashTable_add(hashTable, value);
@@ -213,7 +214,7 @@ bool test_hashTable_add_single_value(void) {
 bool test_hashTable_add_multiple_values(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double values[] = {1.0, 2.0, 3.0, 4.0};
+    Value* values[] = {value_create(1.0), value_create(2.0), value_create(3.0), value_create(4.0) };
     size_t num_values = sizeof(values) / sizeof(values[0]);
     
     // When
@@ -236,7 +237,7 @@ bool test_hashTable_add_multiple_values(void) {
 bool test_hashTable_add_duplicate_value(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double value = 42.0;
+    Value* value = value_create(42.0);
     
     // When
     bool first_add = hashTable_add(hashTable, value);
@@ -254,9 +255,10 @@ bool test_hashTable_add_duplicate_value(void) {
 bool test_hashTable_add_to_null_table(void) {
     // Given
     HashTable* hashTable = NULL;
+    Value* value = value_create(42.0);
     
     // When
-    bool result = hashTable_add(hashTable, 42.0);
+    bool result = hashTable_add(hashTable, value);
     
     // Then
     ASSERT(!result, "Adding to NULL hash table should fail");
@@ -267,7 +269,7 @@ bool test_hashTable_add_to_null_table(void) {
 bool test_hashTable_add_trigger_resize(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(2);  // Small initial capacity
-    double values[] = {1.0, 2.0, 3.0};  // Adding 3 values should trigger resize
+    Value* values[] = {value_create(1.0), value_create(2.0), value_create(3.0)};
     size_t initial_capacity = hashTable->capacity;
     
     // When
@@ -289,8 +291,8 @@ bool test_hashTable_add_trigger_resize(void) {
 bool test_hashTable_add_nearly_equal_values(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double value1 = 1.0;
-    double value2 = 1.0 + EPSILON/2;  // Should be considered equal
+    Value* value1 = value_create(1.0);
+    Value* value2 = value_create(1.0 + EPSILON/2); // Should be considered equal
     
     // When
     bool first_add = hashTable_add(hashTable, value1);
@@ -308,7 +310,7 @@ bool test_hashTable_add_nearly_equal_values(void) {
 bool test_hashTable_add_collision_handling(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(1);  // Force collisions with size 1
-    double values[] = {1.0, 2.0, 3.0};  // All will hash to same bucket
+    Value* values[] = {value_create(1.0), value_create(2.0), value_create(3.0)}; // All will hash to same bucket
     
     // When
     bool all_added = true;
@@ -331,9 +333,9 @@ bool test_hashTable_add_collision_handling(void) {
 bool test_hashTable_add_to_bucket_null_bucket(void) {
     // Given
     Bucket* bucket = NULL;
-    
+    Value* value = value_create(42.0);
     // When
-    bool result = hashTable_add_to_bucket(bucket, 42.0);
+    bool result = hashTable_add_to_bucket(bucket, value);
     
     // Then
     ASSERT(!result, "Adding to NULL bucket should fail");
@@ -344,10 +346,10 @@ bool test_hashTable_add_to_bucket_null_bucket(void) {
 bool test_hash_function_nearly_equal_values(void) {
     // Given
     size_t capacity = 100;
-    double value1 = 1.0;
-    double value2 = 1.0 + 0.5 * EPSILON;  // Difference smaller than epsilon
-    double value3 = 1.0 + 2 * EPSILON;   // Still smaller than epsilon
     
+    Value* value1 = value_create(1.0);
+    Value* value2 = value_create(1.0 + 0.5 * EPSILON); // Difference smaller than epsilon
+    Value* value3 = value_create(1.0 + 2 * EPSILON); // Still smaller than epsilon
     // When
     size_t hash1 = hash_function(value1, capacity);
     size_t hash2 = hash_function(value2, capacity);
@@ -365,8 +367,8 @@ bool test_hash_function_nearly_equal_values(void) {
 bool test_hash_function_different_values(void) {
     // Given
     size_t capacity = 100;
-    double value1 = 1.0;
-    double value2 = 1.0 + 2e-7;  // Difference larger than epsilon
+    Value* value1 = value_create(1.0);
+    Value* value2 = value_create(1.0 + 2e-7); // Difference larger than epsilon
     
     // When
     size_t hash1 = hash_function(value1, capacity);
@@ -382,10 +384,11 @@ bool test_hash_function_different_values(void) {
 bool test_hash_function_edge_cases(void) {
     // Given
     size_t capacity = 100;
-    double very_small1 = 1 * EPSILON;
-    double very_small2 = 2 * EPSILON;  // Difference is 1e-11
-    double zero = 0.0;
-    double negative_zero = -0.0;
+    
+    Value* very_small1 = value_create(1 * EPSILON);
+    Value* very_small2 = value_create(2 * EPSILON);
+    Value* zero = value_create(0.0);
+    Value* negative_zero = value_create(-0.0);
     
     // When/Then
     ASSERT(hash_function(very_small1, capacity) == hash_function(very_small2, capacity),
@@ -404,7 +407,7 @@ bool test_hash_function_distribution(void) {
     
     // When
     for (int i = 0; i < num_values; i++) {
-        double value = i * 1.1;  // Using non-integer values
+        Value* value = value_create(i * 1.1);  // Using non-integer values
         size_t hash = hash_function(value, capacity);
         counts[hash]++;
     }
@@ -429,7 +432,7 @@ bool test_hash_function_distribution(void) {
 bool test_hashTable_resize_basic(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(2);  // Start with small capacity
-    double values[] = {1.0, 2.0};
+    Value* values[] = {value_create(1.0), value_create(2.0) };
     size_t initial_capacity = hashTable->capacity;
     
     hashTable_add(hashTable, values[0]);
@@ -471,7 +474,8 @@ bool test_hashTable_resize_empty(void) {
 bool test_hashTable_resize_with_collisions(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(1);  // Force collisions
-    double values[] = {1.0, 2.0, 3.0};  // All hash to same bucket initially
+    // All hash to same bucket initially
+    Value* values[] = {value_create(1.0), value_create(2.0), value_create(3.0) };
     
     // When
     for (size_t i = 0; i < 3; i++) {
@@ -494,7 +498,8 @@ bool test_hashTable_resize_with_collisions(void) {
 bool test_hashTable_resize_maintains_order(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(2);
-    double values[] = {1.0, 1.1, 1.2, 1.3};  // Values that might hash to same bucket
+    // Values that might hash to same bucket
+    Value* values[] = {value_create(1.0), value_create(1.1), value_create(1.2), value_create(1.3) };
     
     // When
     for (size_t i = 0; i < 4; i++) {
@@ -517,8 +522,8 @@ bool test_hashTable_resize_maintains_order(void) {
 bool test_hashTable_resize_nearly_equal_values(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(2);
-    double value1 = 1.0;
-    double value2 = 1.0 + 1.5 * EPSILON;  // Nearly equal value
+    Value* value1 = value_create(1.0);
+    Value* value2 = value_create(1.0 + 1.5 * EPSILON);  // Nearly equal value
     
     // When
     hashTable_add(hashTable, value1);
@@ -561,11 +566,11 @@ bool test_hashTable_resize_large_dataset(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(2);
     size_t num_values = 1000;
-    double* values = malloc(num_values * sizeof(double));
+    Value** values = malloc(num_values * sizeof(double));
     
     // When
     for (size_t i = 0; i < num_values; i++) {
-        values[i] = i * 1.1;
+        values[i] = value_create(i * 1.1);
         hashTable_add(hashTable, values[i]);
     }
     bool resize_result = hashTable_resize(hashTable);
@@ -587,7 +592,7 @@ bool test_hashTable_resize_large_dataset(void) {
 bool test_hashTable_contains_single_value(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double value = 42.0;
+    Value* value = value_create(42.0);
     
     // When
     hashTable_add(hashTable, value);
@@ -595,7 +600,7 @@ bool test_hashTable_contains_single_value(void) {
     // Then
     ASSERT(hashTable_contains(hashTable, value),
            "Should find added value");
-    ASSERT(!hashTable_contains(hashTable, 43.0),
+    ASSERT(!hashTable_contains(hashTable, value_create(43.0)),
            "Should not find non-existent value");
     
     hashTable_deinit(hashTable);
@@ -607,7 +612,7 @@ bool test_hashTable_contains_null_table(void) {
     HashTable* hashTable = NULL;
     
     // When/Then
-    ASSERT(!hashTable_contains(hashTable, 42.0),
+    ASSERT(!hashTable_contains(hashTable, value_create(42.0)),
            "Should return false for NULL table");
     
     return true;
@@ -616,9 +621,9 @@ bool test_hashTable_contains_null_table(void) {
 bool test_hashTable_contains_nearly_equal_values(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double value = 1.0;
-    double nearly_equal = 1.0 + EPSILON/2;
-    double different = 1.0 + EPSILON*10;
+    Value* value = value_create(1.0);
+    Value* nearly_equal = value_create(1.0 + EPSILON/2);
+    Value* different = value_create(1.0 + EPSILON*10);
     
     // When
     hashTable_add(hashTable, value);
@@ -636,7 +641,8 @@ bool test_hashTable_contains_nearly_equal_values(void) {
 bool test_hashTable_contains_after_collision(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(1);  // Force collisions
-    double values[] = {1.0, 2.0, 3.0};  // Will all hash to same bucket
+    // Will all hash to same bucket
+    Value* values[] = {value_create(1.0), value_create(2.0), value_create(3.0)};
     
     // When
     for (size_t i = 0; i < 3; i++) {
@@ -658,7 +664,7 @@ bool test_hashTable_contains_empty_table(void) {
     HashTable* hashTable = hashTable_init();
     
     // When/Then
-    ASSERT(!hashTable_contains(hashTable, 42.0),
+    ASSERT(!hashTable_contains(hashTable, value_create(42.0)),
            "Empty table should not contain any values");
     
     hashTable_deinit(hashTable);
@@ -668,7 +674,7 @@ bool test_hashTable_contains_empty_table(void) {
 bool test_hashTable_contains_after_resize(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(2);
-    double values[] = {1.0, 2.0, 3.0, 4.0};  // Enough to trigger resize
+    Value* values[] = {value_create(1.0), value_create(2.0), value_create(3.0), value_create(4.0) };
     
     // When
     for (size_t i = 0; i < 4; i++) {
@@ -688,15 +694,15 @@ bool test_hashTable_contains_after_resize(void) {
 bool test_hashTable_contains_edge_values(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double edge_values[] = {
-        0.0,
-        -0.0,
-        1.79769e+308,
-        -1.79769e+308,
-        2.2250738585072014e-308,
-        -2.2250738585072014e-308,
+    Value* edge_values[] = {
+        value_create(0.0),
+        value_create(-0.0),
+        value_create(1.79769e+308),
+        value_create(-1.79769e+308),
+        value_create(2.2250738585072014e-308),
+        value_create(-2.2250738585072014e-308),
     };
-    
+
     // When
     for (size_t i = 0; i < sizeof(edge_values)/sizeof(edge_values[0]); i++) {
         hashTable_add(hashTable, edge_values[i]);
@@ -715,8 +721,8 @@ bool test_hashTable_contains_edge_values(void) {
 bool test_hashTable_contains_very_small_values(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double tiny_value = 1e-9;
-    double slightly_larger = 1.1e-9;
+    Value* tiny_value = value_create(1e-9);
+    Value* slightly_larger = value_create(1.1e-9);
     
     // When
     hashTable_add(hashTable, tiny_value);
@@ -734,7 +740,7 @@ bool test_hashTable_contains_very_small_values(void) {
 bool test_hashTable_remove_single_value(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double value = 42.0;
+    Value* value = value_create(42.0);
     hashTable_add(hashTable, value);
     size_t initial_size = hashTable->size;
     
@@ -755,11 +761,11 @@ bool test_hashTable_remove_single_value(void) {
 bool test_hashTable_remove_non_existent(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    hashTable_add(hashTable, 42.0);
+    hashTable_add(hashTable, value_create(42.0));
     size_t initial_size = hashTable->size;
     
     // When
-    bool remove_result = hashTable_remove(hashTable, 43.0);
+    bool remove_result = hashTable_remove(hashTable, value_create(43.0));
     
     // Then
     ASSERT(!remove_result, "Remove should return false for non-existent value");
@@ -775,7 +781,7 @@ bool test_hashTable_remove_from_null(void) {
     HashTable* hashTable = NULL;
     
     // When
-    bool remove_result = hashTable_remove(hashTable, 42.0);
+    bool remove_result = hashTable_remove(hashTable, value_create(42.0));
     
     // Then
     ASSERT(!remove_result, "Remove should return false for NULL table");
@@ -786,7 +792,8 @@ bool test_hashTable_remove_from_null(void) {
 bool test_hashTable_remove_head_node(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(1);  // Force collisions
-    double values[] = {1.0, 2.0, 3.0};
+    Value* values[] = {value_create(1.0), value_create(2.0), value_create(3.0)};
+    
     for (size_t i = 0; i < 3; i++) {
         hashTable_add(hashTable, values[i]);
     }
@@ -809,7 +816,7 @@ bool test_hashTable_remove_head_node(void) {
 bool test_hashTable_remove_middle_node(void) {
     // Given
     HashTable* hashTable = hashTable_init_alt(1);  // Force collisions
-    double values[] = {1.0, 2.0, 3.0};
+    Value* values[] = {value_create(1.0), value_create(2.0), value_create(3.0)};
     for (size_t i = 0; i < 3; i++) {
         hashTable_add(hashTable, values[i]);
     }
@@ -832,10 +839,10 @@ bool test_hashTable_remove_middle_node(void) {
 bool test_hashTable_remove_nearly_equal_values(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double value = 1.0;
-    double nearly_equal = 1.0 + EPSILON/2;
+    Value* value = value_create(1.0);
+    Value* nearly_equal = value_create(1.0 + EPSILON/2);
 
-hashTable_add(hashTable, value);
+    hashTable_add(hashTable, value);
     
     // When
     bool remove_result = hashTable_remove(hashTable, nearly_equal);
@@ -852,7 +859,8 @@ hashTable_add(hashTable, value);
 bool test_hashTable_remove_all_values(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double values[] = {1.0, 2.0, 3.0, 4.0};
+    Value* values[] = {value_create(1.0), value_create(2.0), value_create(3.0), value_create(4.0) };
+    
     for (size_t i = 0; i < 4; i++) {
         hashTable_add(hashTable, values[i]);
     }
@@ -878,7 +886,7 @@ bool test_hashTable_remove_all_values(void) {
 bool test_hashTable_remove_same_value_twice(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double value = 42.0;
+    Value* value = value_create(42.0);
     hashTable_add(hashTable, value);
     
     // When
@@ -897,13 +905,13 @@ bool test_hashTable_remove_same_value_twice(void) {
 bool test_hashTable_remove_edge_values(void) {
     // Given
     HashTable* hashTable = hashTable_init();
-    double edge_values[] = {
-        0.0,
-        -0.0,
-        1.79769e+308,
-        -1.79769e+308,
-        2.2250738585072014e-308,
-        -2.2250738585072014e-308,
+    Value* edge_values[] = {
+        value_create(0.0),
+        value_create(-0.0),
+        value_create(1.79769e+308),
+        value_create(-1.79769e+308),
+        value_create(2.2250738585072014e-308),
+        value_create(-2.2250738585072014e-308),
     };
     
     // When/Then

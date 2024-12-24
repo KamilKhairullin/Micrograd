@@ -3,9 +3,10 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+//#include "../../../../src/value.h"
 
 typedef struct Node {
-    double value;
+    struct Value* value;
     struct Node* next;
 } Node;
 
@@ -29,16 +30,18 @@ void hashTable_deinit(HashTable* hashTable);
 
 void hashTable_deinit_buckets(HashTable* hashTable);
 
-bool hashTable_add(HashTable* hashTable, double value);
+bool hashTable_add(HashTable* hashTable, struct Value* value);
 
-bool hashTable_add_to_bucket(Bucket* bucket, double value);
+bool hashTable_add_to_bucket(Bucket* bucket, struct Value* value);
 
-bool hashTable_remove(HashTable* hashTable, double value);
+bool hashTable_remove(HashTable* hashTable, struct Value* value);
 
-bool hashTable_contains(HashTable* hashTable, double value);
+bool hashTable_contains(HashTable* hashTable, struct Value* value);
 
 void hashTable_print(HashTable* hashTable);
 
-size_t hash_function(double value, size_t capacity);
+void hashTable_print_short(HashTable* hashTable);
+
+size_t hash_function(struct Value* value, size_t capacity);
 
 #endif

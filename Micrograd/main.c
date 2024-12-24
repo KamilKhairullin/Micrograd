@@ -8,13 +8,5 @@ int main(void) {
     Value* c = value_create(10);
     
     value_print(value_add(value_mul(a, b), c));
-    
-    HashTable* hashTable = hashTable_init();
-    
-    for (size_t i = 0; i < 100; i++) {
-        hashTable_add(hashTable, i);
-    }
-
-    hashTable_print(hashTable);
     return 0;
 }
