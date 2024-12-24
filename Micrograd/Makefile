@@ -1,21 +1,24 @@
 # Compiler options
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall -Wextra -g
 INCLUDES = -Isrc -Itest
 
 # Directories
 BINDIR = bin
 SRCDIR = src
 TESTDIR = test
+LIBDIR = lib
 
 # Source files
 SOURCES = $(shell find $(SRCDIR) -name '*.c')
 TESTSOURCES = $(shell find $(TESTDIR) -name '*.c')
+LIBSOURCES =  $(shell find $(LIBDIR) -name '*.c')
 
 # Object files
 MAIN_OBJ = $(BINDIR)/main.o
 SRC_OBJ = $(SOURCES:%.c=$(BINDIR)/%.o)
 TEST_OBJ = $(TESTSOURCES:%.c=$(BINDIR)/%.o)
+LIB_OBJ = $(LIBSOURCES:%.c=$(BINDIR)/%.o)
 
 # Executable
 EXECUTABLE = $(BINDIR)/main
@@ -35,11 +38,11 @@ $(BINDIR)/%.o: %.c | $(BINDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # Link objects into executable
-$(EXECUTABLE): $(MAIN_OBJ) $(SRC_OBJ)
+$(EXECUTABLE): $(MAIN_OBJ) $(SRC_OBJ) $(LIB_OBJ)
 	$(CC) $(CFLAGS) $^ -o $@
 
 # Link test objects into executable
-$(TEST_EXECUTABLE): $(TEST_OBJ) $(SRC_OBJ)
+$(TEST_EXECUTABLE): $(TEST_OBJ) $(SRC_OBJ) $(LIB_OBJ)
 	$(CC) $(CFLAGS) $^ -o $@
 
 

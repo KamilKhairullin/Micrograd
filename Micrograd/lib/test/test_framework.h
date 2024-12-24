@@ -91,4 +91,12 @@ static void signal_handler(int sig) {
     } while (0)
 
 
+#define PRINT_SUMMARY(stats) \
+    do { \
+        printf("\nTest Summary:\n"); \
+        printf("Total: %d\n", stats.total); \
+        printf(ANSI_COLOR_GREEN "Passed: %d\n" ANSI_COLOR_RESET, stats.passed); \
+        printf(ANSI_COLOR_RED "Failed: %d\n" ANSI_COLOR_RESET, stats.failed); \
+    } while(0)
+
 #endif

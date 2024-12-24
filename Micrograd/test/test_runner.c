@@ -19,19 +19,9 @@ void run_tests(TestStats* stats) {
     RUN_TEST(test_value_mul_by_one, stats);
     RUN_TEST(test_value_mul_null_inputs, stats);
 }
-
-void print_summary(TestStats stats) {
-    printf("\nTest Summary:\n");
-    printf("Total: %d\n", stats.total);
-    printf(ANSI_COLOR_GREEN "Passed: %d\n" ANSI_COLOR_RESET, stats.passed);
-    printf(ANSI_COLOR_RED "Failed: %d\n" ANSI_COLOR_RESET, stats.failed);
-}
-
 int main(void) {
     TestStats stats = {0, 0, 0};
-    printf("\nRunning tests...\n\n");
-    
     run_tests(&stats);
-    print_summary(stats);
+    PRINT_SUMMARY(stats);
     return stats.failed > 0 ? 1 : 0;
 }

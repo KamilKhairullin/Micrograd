@@ -1,7 +1,7 @@
 #ifndef TEST_VALUE_H
 #define TEST_VALUE_H
 
-#include "test_framework.h"
+#include "../lib/test/test_framework.h"
 #include "../src/value.h"
 
 void value_destroy(Value* value);
