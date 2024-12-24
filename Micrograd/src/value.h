@@ -9,5 +9,9 @@ typedef struct Value {
 
 Value* value_create(double data);
 
+Value* value_add(Value* a, Value* b);
+
+Value* value_mul(Value* a, Value* b);
+
 void value_print(Value* v);
 #endif

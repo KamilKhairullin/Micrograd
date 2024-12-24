@@ -16,3 +16,13 @@ void value_print(Value* v) {
     }
     printf("Value(data=%.1f)\n", v->data);
 }
+
+Value* value_add(Value* a, Value* b) {
+    if (a == NULL || b == NULL) return NULL;
+    return value_create(a->data + b->data);
+}
+
+Value* value_mul(Value* a, Value* b) {
+    if (a == NULL || b == NULL) return NULL;
+    return value_create(a->data * b->data);
+}
