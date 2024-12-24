@@ -45,6 +45,16 @@ void run_hashTable_tests(TestStats* stats) {
     RUN_TEST(test_hashTable_contains_after_resize, stats);
     RUN_TEST(test_hashTable_contains_edge_values, stats);
     RUN_TEST(test_hashTable_contains_very_small_values, stats);
+    
+    RUN_TEST(test_hashTable_remove_single_value, stats);
+    RUN_TEST(test_hashTable_remove_non_existent, stats);
+    RUN_TEST(test_hashTable_remove_from_null, stats);
+    RUN_TEST(test_hashTable_remove_head_node, stats);
+    RUN_TEST(test_hashTable_remove_middle_node, stats);
+    RUN_TEST(test_hashTable_remove_nearly_equal_values, stats);
+    RUN_TEST(test_hashTable_remove_all_values, stats);
+    RUN_TEST(test_hashTable_remove_same_value_twice, stats);
+    RUN_TEST(test_hashTable_remove_edge_values, stats);
 }
 
 void run_tests(TestStats* stats) {

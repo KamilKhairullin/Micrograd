@@ -143,6 +143,29 @@ bool hashTable_contains(HashTable* hashTable, double value) {
     return false;
 }
 
+bool hashTable_remove(HashTable* hashTable, double value) {
+    if (hashTable == NULL) return false;
+    size_t index = hash_function(value, hashTable->capacity);
+    Bucket* bucket = &hashTable->buckets[index];
+    Node* iterator = bucket->head;
+    Node* prev = NULL;
+    
+    while(iterator != NULL) {
+        if (fabs(iterator->value - value) < EPSILON) {
+            if (prev == NULL) {
+                bucket->head = iterator->next;
+            } else {
+                prev->next = iterator->next;
+            }
+            free(iterator);
+            hashTable->size--;
+            return true;
+        }
+        prev = iterator;
+        iterator = iterator->next;
+    }
+    return false;
+}
 
 void hashTable_print(HashTable* hashTable) {
     if (hashTable == NULL) {

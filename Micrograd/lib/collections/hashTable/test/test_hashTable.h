@@ -48,4 +48,14 @@ bool test_hashTable_contains_after_resize(void);
 bool test_hashTable_contains_edge_values(void);
 bool test_hashTable_contains_very_small_values(void);
 
+bool test_hashTable_remove_single_value(void);
+bool test_hashTable_remove_non_existent(void);
+bool test_hashTable_remove_from_null(void);
+bool test_hashTable_remove_head_node(void);
+bool test_hashTable_remove_middle_node(void);
+bool test_hashTable_remove_nearly_equal_values(void);
+bool test_hashTable_remove_all_values(void);
+bool test_hashTable_remove_same_value_twice(void);
+bool test_hashTable_remove_edge_values(void);
+
 #endif

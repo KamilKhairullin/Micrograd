@@ -730,3 +730,191 @@ bool test_hashTable_contains_very_small_values(void) {
     hashTable_deinit(hashTable);
     return true;
 }
+
+bool test_hashTable_remove_single_value(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    double value = 42.0;
+    hashTable_add(hashTable, value);
+    size_t initial_size = hashTable->size;
+    
+    // When
+    bool remove_result = hashTable_remove(hashTable, value);
+    
+    // Then
+    ASSERT(remove_result, "Remove should return true for existing value");
+    ASSERT(!hashTable_contains(hashTable, value),
+           "Value should not exist after removal");
+    ASSERT(hashTable->size == initial_size - 1,
+           "Size should decrease after removal");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_remove_non_existent(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    hashTable_add(hashTable, 42.0);
+    size_t initial_size = hashTable->size;
+    
+    // When
+    bool remove_result = hashTable_remove(hashTable, 43.0);
+    
+    // Then
+    ASSERT(!remove_result, "Remove should return false for non-existent value");
+    ASSERT(hashTable->size == initial_size,
+           "Size should not change when removal fails");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_remove_from_null(void) {
+    // Given
+    HashTable* hashTable = NULL;
+    
+    // When
+    bool remove_result = hashTable_remove(hashTable, 42.0);
+    
+    // Then
+    ASSERT(!remove_result, "Remove should return false for NULL table");
+    
+    return true;
+}
+
+bool test_hashTable_remove_head_node(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(1);  // Force collisions
+    double values[] = {1.0, 2.0, 3.0};
+    for (size_t i = 0; i < 3; i++) {
+        hashTable_add(hashTable, values[i]);
+    }
+    
+    // When
+    bool remove_result = hashTable_remove(hashTable, values[2]); // Remove head
+    
+    // Then
+    ASSERT(remove_result, "Should successfully remove head node");
+    ASSERT(!hashTable_contains(hashTable, values[2]),
+           "Removed value should not exist");
+    ASSERT(hashTable_contains(hashTable, values[0]) &&
+           hashTable_contains(hashTable, values[1]),
+           "Other values should still exist");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_remove_middle_node(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(1);  // Force collisions
+    double values[] = {1.0, 2.0, 3.0};
+    for (size_t i = 0; i < 3; i++) {
+        hashTable_add(hashTable, values[i]);
+    }
+    
+    // When
+    bool remove_result = hashTable_remove(hashTable, values[1]); // Remove middle
+    
+    // Then
+    ASSERT(remove_result, "Should successfully remove middle node");
+    ASSERT(!hashTable_contains(hashTable, values[1]),
+           "Removed value should not exist");
+    ASSERT(hashTable_contains(hashTable, values[0]) &&
+           hashTable_contains(hashTable, values[2]),
+           "Other values should still exist");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_remove_nearly_equal_values(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    double value = 1.0;
+    double nearly_equal = 1.0 + EPSILON/2;
+
+hashTable_add(hashTable, value);
+    
+    // When
+    bool remove_result = hashTable_remove(hashTable, nearly_equal);
+    
+    // Then
+    ASSERT(remove_result, "Should remove nearly equal value");
+    ASSERT(!hashTable_contains(hashTable, value),
+           "Original value should not exist after removal");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_remove_all_values(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    double values[] = {1.0, 2.0, 3.0, 4.0};
+    for (size_t i = 0; i < 4; i++) {
+        hashTable_add(hashTable, values[i]);
+    }
+    
+    // When
+    bool all_removed = true;
+    for (size_t i = 0; i < 4; i++) {
+        all_removed &= hashTable_remove(hashTable, values[i]);
+    }
+    
+    // Then
+    ASSERT(all_removed, "Should successfully remove all values");
+    ASSERT(hashTable->size == 0, "Size should be 0 after removing all values");
+    for (size_t i = 0; i < 4; i++) {
+        ASSERT(!hashTable_contains(hashTable, values[i]),
+               "No values should exist after removal");
+    }
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_remove_same_value_twice(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    double value = 42.0;
+    hashTable_add(hashTable, value);
+    
+    // When
+    bool first_remove = hashTable_remove(hashTable, value);
+    bool second_remove = hashTable_remove(hashTable, value);
+    
+    // Then
+    ASSERT(first_remove, "First remove should succeed");
+    ASSERT(!second_remove, "Second remove should fail");
+    ASSERT(hashTable->size == 0, "Size should be 0 after removal");
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_remove_edge_values(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    double edge_values[] = {
+        0.0,
+        -0.0,
+        1.79769e+308,
+        -1.79769e+308,
+        2.2250738585072014e-308,
+        -2.2250738585072014e-308,
+    };
+    
+    // When/Then
+    for (size_t i = 0; i < sizeof(edge_values)/sizeof(edge_values[0]); i++) {
+        hashTable_add(hashTable, edge_values[i]);
+        ASSERT(hashTable_remove(hashTable, edge_values[i]),
+               "Should successfully remove edge values");
+        ASSERT(!hashTable_contains(hashTable, edge_values[i]),
+               "Edge value should not exist after removal");
+    }
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
