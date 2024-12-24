@@ -25,6 +25,7 @@ HashTable* hashTable_init(void) {
 HashTable* hashTable_init_alt(size_t capacity) {
     HashTable* hashTable = malloc(sizeof(HashTable));
     if (hashTable == NULL) return NULL;
+    if (capacity < 1) return NULL;
 
     hashTable->size = 0;
     hashTable->capacity = capacity;

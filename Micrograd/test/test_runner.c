@@ -1,4 +1,12 @@
 #include "test_value.h"
+#include "../lib/collections/hashTable/test/test_hashTable.h"
+
+void run_hashTable_tests(TestStats* stats) {
+    RUN_TEST(test_hashTable_init_success, stats);
+    RUN_TEST(test_hashTable_init_alt_success, stats);
+    RUN_TEST(test_hashTable_init_alt_zero_capacity, stats);
+    RUN_TEST(test_hashTable_init_alt_large_capacity, stats);
+}
 
 void run_tests(TestStats* stats) {
     RUN_TEST(test_value_create_positive, stats);
@@ -22,6 +30,7 @@ void run_tests(TestStats* stats) {
 int main(void) {
     TestStats stats = {0, 0, 0};
     run_tests(&stats);
+    run_hashTable_tests(&stats);
     PRINT_SUMMARY(stats);
     return stats.failed > 0 ? 1 : 0;
 }

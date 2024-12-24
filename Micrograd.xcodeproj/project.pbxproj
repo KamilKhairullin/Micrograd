@@ -13,6 +13,7 @@
 		8E37CC252D1A1A6A00B67AD6 /* test_runner.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC242D1A1A6A00B67AD6 /* test_runner.c */; };
 		8E37CC2B2D1A207400B67AD6 /* test_value.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC2A2D1A207400B67AD6 /* test_value.c */; };
 		8E37CC372D1AD8A400B67AD6 /* hashTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC362D1AD8A400B67AD6 /* hashTable.c */; };
+		8E37CC3A2D1B228800B67AD6 /* test_hashTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC392D1B228800B67AD6 /* test_hashTable.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +40,8 @@
 		8E37CC2A2D1A207400B67AD6 /* test_value.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test_value.c; sourceTree = "<group>"; };
 		8E37CC352D1AD8A400B67AD6 /* hashTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hashTable.h; sourceTree = "<group>"; };
 		8E37CC362D1AD8A400B67AD6 /* hashTable.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = hashTable.c; sourceTree = "<group>"; };
+		8E37CC382D1B228800B67AD6 /* test_hashTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_hashTable.h; sourceTree = "<group>"; };
+		8E37CC392D1B228800B67AD6 /* test_hashTable.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test_hashTable.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +140,8 @@
 		8E37CC302D1A3DFF00B67AD6 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				8E37CC382D1B228800B67AD6 /* test_hashTable.h */,
+				8E37CC392D1B228800B67AD6 /* test_hashTable.c */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -206,6 +211,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E37CC3A2D1B228800B67AD6 /* test_hashTable.c in Sources */,
 				8E37CC372D1AD8A400B67AD6 /* hashTable.c in Sources */,
 				8E37CC202D1A0AAE00B67AD6 /* value.c in Sources */,
 				8E37CC2B2D1A207400B67AD6 /* test_value.c in Sources */,
