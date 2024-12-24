@@ -6,6 +6,15 @@ void run_hashTable_tests(TestStats* stats) {
     RUN_TEST(test_hashTable_init_alt_success, stats);
     RUN_TEST(test_hashTable_init_alt_zero_capacity, stats);
     RUN_TEST(test_hashTable_init_alt_large_capacity, stats);
+
+    RUN_TEST(test_hashTable_init_buckets_initialized_to_null, stats);
+    RUN_TEST(test_hashTable_init_alt_buckets_initialized_to_null, stats);
+    RUN_TEST(test_hashTable_init_multiple_instances, stats);
+    RUN_TEST(test_hashTable_init_alt_multiple_instances, stats);
+    RUN_TEST(test_hashTable_init_alt_very_small_capacity, stats);
+    RUN_TEST(test_hashTable_init_memory_alignment, stats);
+    RUN_TEST(test_hashTable_init_alt_max_size_minus_one, stats);
+
 }
 
 void run_tests(TestStats* stats) {
