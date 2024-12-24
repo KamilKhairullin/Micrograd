@@ -7,15 +7,20 @@
 #define INITIAL_CAPACITY 16
 #define LOAD_FACTOR_THRESHOLD 0.8
 
-static size_t hash_function(double value, size_t capacity) {
+size_t hash_function(double value, size_t capacity) {
+    double rounded_value = round(value * 1e10) / 1e10;
+    if (rounded_value == -0) {
+        rounded_value = 0;
+    }
     unsigned long long bits;
-    memcpy(&bits, &value, sizeof(double));
+    memcpy(&bits, &rounded_value, sizeof(double));
     bits = ((bits >> 32) ^ bits) * 0x45d9f3b;
     bits = ((bits >> 32) ^ bits) * 0x45d9f3b;
     bits = (bits >> 32) ^ bits;
 
     return bits % capacity;
 }
+
 
 
 HashTable* hashTable_init(void) {
@@ -87,7 +92,6 @@ bool hashTable_resize(HashTable* hashTable) {
 
 bool hashTable_add(HashTable* hashTable, double value) {
     if (hashTable == NULL) return false;
-    
     // check if resize needed
     double loadPercent = (double)(hashTable->size+1) / (double)hashTable->capacity;
     if(loadPercent > LOAD_FACTOR_THRESHOLD) {
@@ -96,12 +100,14 @@ bool hashTable_add(HashTable* hashTable, double value) {
     
     size_t index = hash_function(value, hashTable->capacity);
     Bucket* bucket = &hashTable->buckets[index];
-    hashTable_add_to_bucket(bucket, value);
+    bool addToBucketResult = hashTable_add_to_bucket(bucket, value);
+    if (!addToBucketResult) return false;
     hashTable->size++;
     return true;
 }
 
 bool hashTable_add_to_bucket(Bucket* bucket, double value) {
+    if (bucket == NULL) return false;
     Node* headNode = bucket->head;
     // check if value already exists
     Node* iterator = headNode;

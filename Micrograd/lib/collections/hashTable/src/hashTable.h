@@ -39,4 +39,6 @@ bool hashTable_contains(HashTable* hashTable, double value);
 
 void hashTable_print(HashTable* hashTable);
 
+size_t hash_function(double value, size_t capacity);
+
 #endif

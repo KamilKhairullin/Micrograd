@@ -16,4 +16,18 @@ bool test_hashTable_init_alt_multiple_instances(void);
 bool test_hashTable_init_alt_very_small_capacity(void);
 bool test_hashTable_init_memory_alignment(void);
 bool test_hashTable_init_alt_max_size_minus_one(void);
+
+bool test_hashTable_add_single_value(void);
+bool test_hashTable_add_multiple_values(void);
+bool test_hashTable_add_duplicate_value(void);
+bool test_hashTable_add_to_null_table(void);
+bool test_hashTable_add_trigger_resize(void);
+bool test_hashTable_add_nearly_equal_values(void);
+bool test_hashTable_add_collision_handling(void);
+bool test_hashTable_add_to_bucket_null_bucket(void);
+
+bool test_hash_function_nearly_equal_values(void);
+bool test_hash_function_different_values(void);
+bool test_hash_function_edge_cases(void);
+bool test_hash_function_distribution(void);
 #endif

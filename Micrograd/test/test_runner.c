@@ -15,6 +15,19 @@ void run_hashTable_tests(TestStats* stats) {
     RUN_TEST(test_hashTable_init_memory_alignment, stats);
     RUN_TEST(test_hashTable_init_alt_max_size_minus_one, stats);
 
+    RUN_TEST(test_hashTable_add_single_value, stats);
+    RUN_TEST(test_hashTable_add_multiple_values, stats);
+    RUN_TEST(test_hashTable_add_duplicate_value, stats);
+    RUN_TEST(test_hashTable_add_to_null_table, stats);
+    RUN_TEST(test_hashTable_add_trigger_resize, stats);
+    RUN_TEST(test_hashTable_add_nearly_equal_values, stats);
+    RUN_TEST(test_hashTable_add_collision_handling, stats);
+    RUN_TEST(test_hashTable_add_to_bucket_null_bucket, stats);
+    
+    RUN_TEST(test_hash_function_nearly_equal_values, stats);
+    RUN_TEST(test_hash_function_different_values, stats);
+    RUN_TEST(test_hash_function_edge_cases, stats);
+    RUN_TEST(test_hash_function_distribution, stats);
 }
 
 void run_tests(TestStats* stats) {
