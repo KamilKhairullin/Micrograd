@@ -27,6 +27,8 @@ Value* value_tanh(Value* a);
 
 void backward(Value* v);
 
+void __backward(Value* v);
+
 void backward_add(Value* a, Value* b, Value* result);
 
 void backward_mul(Value* a, Value* b, Value* result);

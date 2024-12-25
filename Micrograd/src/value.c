@@ -60,32 +60,40 @@ Value* value_tanh(Value* a) {
 }
 
 void backward(Value* v) {
+    v->grad = 1.0;
+    __backward(v);
+}
+
+void __backward(Value* v) {
     if (v->prev == NULL) return;
     if (v->prev->size == 0) return;
-    
     char* operation = v->operation;
     Value** items = hashTable_get_all_items(v->prev);
+    
     Value* left = NULL;
     Value* right = NULL;
-    if (strcmp(operation, "+") == 0) {
+    
+    if (v->prev->size == 1) {
+        left = items[0];
+        right = items[0];
+    } else {
         left = items[0];
         right = items[1];
+    }
+    if (strcmp(operation, "+") == 0) {
         backward_add(left, right, v);
     } else if (strcmp(operation, "*") == 0) {
-        left = items[0];
-        right = items[1];
         backward_mul(left, right, v);
     } else if (strcmp(operation, "tanh") == 0) {
-        left = items[0];
         backward_tanh(left, v);
     }
     
     if (left != NULL) {
-        backward(left);
+        __backward(left);
     }
 
     if (right != NULL) {
-        backward(right);
+        __backward(right);
     }
 }
 
