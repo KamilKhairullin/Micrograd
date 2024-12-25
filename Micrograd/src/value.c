@@ -10,6 +10,7 @@ Value* value_create(double data) {
         newValue->operation = "";
         newValue->label = NULL;
         newValue->grad = 0.0;
+        newValue->uid = rand() % (100000000 + 1 - 0) + 0;
     }
     return newValue;
 }
@@ -46,6 +47,16 @@ Value* value_add(Value* a, Value* b) {
     return value_create_alt(a->data + b->data, a, b, "+");
 }
 
+Value* value_sub(Value* a, Value* b) {
+    if (a == NULL || b == NULL) return NULL;
+    return value_add_raw(a, (-1) * b->data); 
+}
+
+Value* value_sub_raw(Value* a, double b) {
+    if (a == NULL) return NULL;
+    return value_add_raw(a, (-1) * b);
+}
+
 Value* value_add_raw(Value* a, double b) {
     return value_add(a, value_create(b));
 }
@@ -62,20 +73,60 @@ Value* value_mul_raw(Value* a, double b) {
 Value* value_tanh(Value* a) {
     if (a == NULL) return NULL;
     double n = a->data;
-    double t = (exp(2 * n) - 1) / (exp(2 * n) + 1);
-    return value_create_alt(t, a, NULL, "tanh");
+    double out = (exp(2 * n) - 1) / (exp(2 * n) + 1);
+    return value_create_alt(out, a, NULL, "tanh");
 }
 
 Value* value_exp(Value* a) {
     if (a == NULL) return NULL;
-    double n = a->data;
-    double t = exp(n);
-    return value_create_alt(t, a, NULL, "exp");
+    double out = exp(a->data);
+    return value_create_alt(out, a, NULL, "exp");
+}
+
+Value* value_power(Value* a, double power) {
+    if (a == NULL) return NULL;
+    double out = pow(a->data, power);
+    return value_create_alt(out, a, value_create(power), "pow");
+}
+
+Value* value_div(Value* a, Value* b) {
+    if (a == NULL) return NULL;
+    Value* b_powered = value_power(b, -1.0);
+    return value_mul(a, b_powered);
+}
+
+Value* value_div_raw(Value* a, double b) {
+    if (a == NULL) return NULL;
+    
+    return value_div(a, value_create(b));
 }
 
 void backward(Value* v) {
+    ArrayList* topo = createArrayList(32);
+    HashTable* visited = hashTable_init();
+    build_topo(v, visited, topo);
     v->grad = 1.0;
-    __backward(v);
+    printList(topo);
+    for (int i = topo->size - 1; i >= 0; i--) {
+        __backward(get(topo, i));
+    }
+}
+
+void build_topo(Value* v, HashTable* visited, ArrayList* topo) {
+    if (!hashTable_contains(visited, v)) {
+        hashTable_add(visited, v);
+        Value** items = hashTable_get_all_items(v->prev);
+        int prevSize;
+        if(v->prev == NULL) {
+            prevSize = 0;
+        } else {
+            prevSize = (int)v->prev->size;
+        }
+        for (int i = 0; i < prevSize; i++) {
+            build_topo(items[i], visited, topo);
+        }
+        add(topo, v);
+    }
 }
 
 void __backward(Value* v) {
@@ -102,14 +153,8 @@ void __backward(Value* v) {
         backward_tanh(left, v);
     } else if (strcmp(operation, "exp") == 0) {
         backward_exp(left, v);
-    }
-    
-    if (left != NULL) {
-        __backward(left);
-    }
-
-    if (right != NULL) {
-        __backward(right);
+    } else if (strcmp(operation, "pow") == 0) {
+        backward_pow(left, right, v);
     }
 }
 
@@ -129,6 +174,10 @@ void backward_tanh(Value* a, Value* result) {
 
 void backward_exp(Value* a, Value* result) {
     a->grad += result->data * result->grad;
+}
+
+void backward_pow(Value* a, Value* power, Value* result) {
+    a->grad += (power->data * pow(a->data, power->data - 1)) * result->grad;
 }
 
 void value_vizualize_trace(Value* value) {

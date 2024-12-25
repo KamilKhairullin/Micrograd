@@ -136,7 +136,9 @@ bool hashTable_contains(HashTable* hashTable, Value* value) {
     Node* iterator = bucket->head;
     
     while(iterator != NULL) {
-        if (fabs(iterator->value->data - value->data) < EPSILON) {
+        bool isDataEqual = fabs(iterator->value->data - value->data) < EPSILON;
+        bool isUuidEqual = iterator->value->uid == value->uid;
+        if (isDataEqual && isUuidEqual) {
             return true;
         }
         iterator = iterator->next;
@@ -222,7 +224,7 @@ void hashTable_print_short(HashTable* hashTable) {
         if (head != NULL) {
             while(head != NULL) {
                 Node* nextNode = head->next;
-                printf("%.1f ", head->value->data);
+                printf("%s ", head->value->label);
                 head = nextNode;
             }
         }

@@ -625,6 +625,9 @@ bool test_hashTable_contains_nearly_equal_values(void) {
     Value* nearly_equal = value_create(1.0 + EPSILON/2);
     Value* different = value_create(1.0 + EPSILON*10);
     
+    value->uid = 0.0;
+    nearly_equal->uid = 0.0;
+    different->uid = 0.0;
     // When
     hashTable_add(hashTable, value);
     
@@ -710,6 +713,7 @@ bool test_hashTable_contains_edge_values(void) {
     
     // Then
     for (size_t i = 0; i < sizeof(edge_values)/sizeof(edge_values[0]); i++) {
+        edge_values[i]->uid = 0.0;
         ASSERT(hashTable_contains(hashTable, edge_values[i]),
                "Should handle edge values correctly");
     }
