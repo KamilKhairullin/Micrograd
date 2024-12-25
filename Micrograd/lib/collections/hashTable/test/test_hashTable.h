@@ -58,4 +58,10 @@ bool test_hashTable_remove_all_values(void);
 bool test_hashTable_remove_same_value_twice(void);
 bool test_hashTable_remove_edge_values(void);
 
+bool test_hashTable_get_all_items_null_table(void);
+bool test_hashTable_get_all_items_empty_table(void);
+bool test_hashTable_get_all_items_single_value(void);
+bool test_hashTable_get_all_items_multiple_values(void);
+bool test_hashTable_get_all_items_collision(void);
+
 #endif

@@ -926,3 +926,120 @@ bool test_hashTable_remove_edge_values(void) {
     hashTable_deinit(hashTable);
     return true;
 }
+
+bool test_hashTable_get_all_items_null_table(void) {
+    // When
+    Value** items = hashTable_get_all_items(NULL);
+    
+    // Then
+    ASSERT_NULL(items);
+    return true;
+}
+
+bool test_hashTable_get_all_items_empty_table(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    
+    // When
+    Value** items = hashTable_get_all_items(hashTable);
+    
+    // Then
+    ASSERT_NULL(items);
+    
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_get_all_items_single_value(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    Value* value = value_create(1.0);
+    hashTable_add(hashTable, value);
+    
+    // When
+    Value** items = hashTable_get_all_items(hashTable);
+    
+    // Then
+    ASSERT_NOT_NULL(items);
+    ASSERT_EQUAL_DOUBLE(1.0, items[0]->data, EPSILON);
+    
+    free(items);
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_get_all_items_multiple_values(void) {
+    // Given
+    HashTable* hashTable = hashTable_init();
+    Value* values[] = {
+        value_create(1.0),
+        value_create(2.0),
+        value_create(3.0)
+    };
+    
+    for (size_t i = 0; i < 3; i++) {
+        hashTable_add(hashTable, values[i]);
+    }
+    
+    // When
+    Value** items = hashTable_get_all_items(hashTable);
+    
+    // Then
+    ASSERT_NOT_NULL(items);
+    
+    // Check all values are present (order might be different)
+    bool found[3] = {false, false, false};
+    for (size_t i = 0; i < 3; i++) {
+        for (size_t j = 0; j < 3; j++) {
+            if (fabs(items[i]->data - values[j]->data) < EPSILON) {
+                found[j] = true;
+            }
+        }
+    }
+    
+    for (size_t i = 0; i < 3; i++) {
+        ASSERT(found[i], "All original values should be found");
+    }
+    
+    free(items);
+    hashTable_deinit(hashTable);
+    return true;
+}
+
+bool test_hashTable_get_all_items_collision(void) {
+    // Given
+    HashTable* hashTable = hashTable_init_alt(1);  // Force collisions with capacity 1
+    Value* values[] = {
+        value_create(1.0),
+        value_create(2.0),
+        value_create(3.0)
+    };
+    
+    for (size_t i = 0; i < 3; i++) {
+        hashTable_add(hashTable, values[i]);
+    }
+    
+    // When
+    Value** items = hashTable_get_all_items(hashTable);
+    
+    // Then
+    ASSERT_NOT_NULL(items);
+    
+    // Check all values are present
+    bool found[3] = {false, false, false};
+    for (size_t i = 0; i < 3; i++) {
+        for (size_t j = 0; j < 3; j++) {
+            if (fabs(items[i]->data - values[j]->data) < EPSILON) {
+                found[j] = true;
+            }
+        }
+    }
+    
+    for (size_t i = 0; i < 3; i++) {
+        ASSERT(found[i], "All values should be found even with collisions");
+    }
+    
+    free(items);
+    hashTable_deinit(hashTable);
+    return true;
+}

@@ -25,6 +25,14 @@ Value* value_mul(Value* a, Value* b);
 
 Value* value_tanh(Value* a);
 
+void backward(Value* v);
+
+void backward_add(Value* a, Value* b, Value* result);
+
+void backward_mul(Value* a, Value* b, Value* result);
+
+void backward_tanh(Value* a, Value* result);
+
 void value_print(Value* v);
 
 void value_vizualize_trace(Value* value, int depth, char* prefix);

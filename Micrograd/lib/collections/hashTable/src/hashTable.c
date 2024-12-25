@@ -168,6 +168,28 @@ bool hashTable_remove(HashTable* hashTable, Value* value) {
     return false;
 }
 
+Value** hashTable_get_all_items(HashTable* hashTable) {
+    if (hashTable == NULL) return NULL;
+    if (hashTable->size == 0) return NULL;
+    
+    Value** items = malloc(sizeof(Value*) * hashTable->size);
+    
+    if (items == NULL) return NULL;
+
+    size_t currentIndex = 0;
+    for (size_t i = 0; i < hashTable->capacity; i++) {
+        Bucket* bucket = &hashTable->buckets[i];
+        Node* current = bucket->head;
+
+        while (current != NULL) {
+            items[currentIndex++] = current->value;
+            current = current->next;
+        }
+    }
+    return items;
+}
+
+
 void hashTable_print(HashTable* hashTable) {
     if (hashTable == NULL) {
         printf("Value(NULL)\n");

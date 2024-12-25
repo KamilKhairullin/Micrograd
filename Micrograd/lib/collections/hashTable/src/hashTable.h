@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
-//#include "../../../../src/value.h"
 
 typedef struct Node {
     struct Value* value;
@@ -41,6 +40,8 @@ bool hashTable_contains(HashTable* hashTable, struct Value* value);
 void hashTable_print(HashTable* hashTable);
 
 void hashTable_print_short(HashTable* hashTable);
+
+struct Value** hashTable_get_all_items(HashTable* hashTable);
 
 size_t hash_function(struct Value* value, size_t capacity);
 

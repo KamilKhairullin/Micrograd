@@ -59,6 +59,49 @@ Value* value_tanh(Value* a) {
     return value_create_alt(t, a, NULL, "tanh");
 }
 
+void backward(Value* v) {
+    if (v->prev == NULL) return;
+    if (v->prev->size == 0) return;
+    
+    char* operation = v->operation;
+    Value** items = hashTable_get_all_items(v->prev);
+    Value* left = NULL;
+    Value* right = NULL;
+    if (strcmp(operation, "+") == 0) {
+        left = items[0];
+        right = items[1];
+        backward_add(left, right, v);
+    } else if (strcmp(operation, "*") == 0) {
+        left = items[0];
+        right = items[1];
+        backward_mul(left, right, v);
+    } else if (strcmp(operation, "tanh") == 0) {
+        left = items[0];
+        backward_tanh(left, v);
+    }
+    
+    if (left != NULL) {
+        backward(left);
+    }
+
+    if (right != NULL) {
+        backward(right);
+    }
+}
+
+void backward_add(Value* a, Value* b, Value* result) {
+    a->grad = 1.0 * result->grad;
+    b->grad = 1.0 * result->grad;
+}
+
+void backward_mul(Value* a, Value* b, Value* result) {
+    a->grad = b->data * result->grad;
+    b->grad = a->data * result->grad;
+}
+
+void backward_tanh(Value* a, Value* result) {
+    a->grad = (1.0 - result->data * result->data) * result->grad;
+}
 
 void value_vizualize_trace(Value* value, int depth, char* prefix) {
     if (value == NULL) return;
@@ -66,13 +109,13 @@ void value_vizualize_trace(Value* value, int depth, char* prefix) {
     printf("%s", prefix);
     
     if(depth == 0 && strcmp(value->operation, "") == 0) {
-        printf("    %s | %.2f | grad: %0.1f\n", value->label, value->data, value->grad);
+        printf("    %s | %.4f | grad: %0.4f\n", value->label, value->data, value->grad);
     } else if (depth == 0) {
-        printf("    %s | %.2f (%s) | grad: %0.1f\n", value->label, value->data, value->operation, value->grad);
+        printf("    %s | %.4f (%s) | grad: %0.4f\n", value->label, value->data, value->operation, value->grad);
     } else if (strcmp(value->operation, "") == 0) {
-        printf("└── %s | %.2f| grad: %0.1f\n", value->label,  value->data, value->grad);
+        printf("└── %s | %.4f| grad: %0.4f\n", value->label,  value->data, value->grad);
     } else {
-        printf("└── %s | %.2f (%s) | grad: %0.1f\n", value->label, value->data, value->operation, value->grad);
+        printf("└── %s | %.4f (%s) | grad: %0.4f\n", value->label, value->data, value->operation, value->grad);
     }
       
     if (value->prev != NULL) {
