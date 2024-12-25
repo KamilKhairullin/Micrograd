@@ -28,7 +28,6 @@ Value* value_create_alt(double data, Value* left, Value* right, char* operation)
     if (newValue != NULL) {
         newValue->prev = set;
         newValue->operation = operation;
-        newValue->grad = 0.0;
     }
     return newValue;
 }
@@ -47,9 +46,17 @@ Value* value_add(Value* a, Value* b) {
     return value_create_alt(a->data + b->data, a, b, "+");
 }
 
+Value* value_add_raw(Value* a, double b) {
+    return value_add(a, value_create(b));
+}
+
 Value* value_mul(Value* a, Value* b) {
     if (a == NULL || b == NULL) return NULL;
     return value_create_alt(a->data * b->data, a, b, "*");
+}
+
+Value* value_mul_raw(Value* a, double b) {
+    return value_mul(a, value_create(b));
 }
 
 Value* value_tanh(Value* a) {
@@ -57,6 +64,13 @@ Value* value_tanh(Value* a) {
     double n = a->data;
     double t = (exp(2 * n) - 1) / (exp(2 * n) + 1);
     return value_create_alt(t, a, NULL, "tanh");
+}
+
+Value* value_exp(Value* a) {
+    if (a == NULL) return NULL;
+    double n = a->data;
+    double t = exp(n);
+    return value_create_alt(t, a, NULL, "exp");
 }
 
 void backward(Value* v) {
@@ -86,6 +100,8 @@ void __backward(Value* v) {
         backward_mul(left, right, v);
     } else if (strcmp(operation, "tanh") == 0) {
         backward_tanh(left, v);
+    } else if (strcmp(operation, "exp") == 0) {
+        backward_exp(left, v);
     }
     
     if (left != NULL) {
@@ -98,20 +114,27 @@ void __backward(Value* v) {
 }
 
 void backward_add(Value* a, Value* b, Value* result) {
-    a->grad = 1.0 * result->grad;
-    b->grad = 1.0 * result->grad;
+    a->grad += 1.0 * result->grad;
+    b->grad += 1.0 * result->grad;
 }
 
 void backward_mul(Value* a, Value* b, Value* result) {
-    a->grad = b->data * result->grad;
-    b->grad = a->data * result->grad;
+    a->grad += b->data * result->grad;
+    b->grad += a->data * result->grad;
 }
 
 void backward_tanh(Value* a, Value* result) {
-    a->grad = (1.0 - result->data * result->data) * result->grad;
+    a->grad += (1.0 - result->data * result->data) * result->grad;
 }
 
-void value_vizualize_trace(Value* value, int depth, char* prefix) {
+void backward_exp(Value* a, Value* result) {
+    a->grad += result->data * result->grad;
+}
+
+void value_vizualize_trace(Value* value) {
+    __value_vizualize_trace(value, 0, "");
+}
+void __value_vizualize_trace(Value* value, int depth, char* prefix) {
     if (value == NULL) return;
     
     printf("%s", prefix);
@@ -135,7 +158,7 @@ void value_vizualize_trace(Value* value, int depth, char* prefix) {
             Node* current = value->prev->buckets[i].head;
             while (current != NULL) {
                 Value* childValue = (Value*)current->value;
-                value_vizualize_trace(childValue, depth + 1, new_prefix);
+                __value_vizualize_trace(childValue, depth + 1, new_prefix);
                 current = current->next;
             }
         }

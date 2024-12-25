@@ -30,4 +30,9 @@ bool test_value_tanh_positive_input(void);
 bool test_value_tanh_negative_input(void);
 bool test_value_tanh_large_values(void);
 bool test_value_tanh_chained_ops(void);
+
+bool test_value_exp_null_input(void);
+bool test_value_exp_zero(void);
+bool test_value_exp_one(void);
+bool test_value_exp_negative_one(void);
 #endif

@@ -21,9 +21,15 @@ Value* value_create_labled(double data, char* label);
 
 Value* value_add(Value* a, Value* b);
 
+Value* value_add_raw(Value* a, double b);
+
 Value* value_mul(Value* a, Value* b);
 
+Value* value_mul_raw(Value* a, double b);
+
 Value* value_tanh(Value* a);
+
+Value* value_exp(Value* a);
 
 void backward(Value* v);
 
@@ -35,8 +41,12 @@ void backward_mul(Value* a, Value* b, Value* result);
 
 void backward_tanh(Value* a, Value* result);
 
+void backward_exp(Value* a, Value* result);
+
 void value_print(Value* v);
 
-void value_vizualize_trace(Value* value, int depth, char* prefix);
+void value_vizualize_trace(Value* value);
+
+void __value_vizualize_trace(Value* value, int depth, char* prefix);
 
 #endif

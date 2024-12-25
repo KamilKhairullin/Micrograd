@@ -384,3 +384,61 @@ bool test_value_tanh_chained_ops(void) {
     return true;
 }
 
+bool test_value_exp_null_input(void) {
+    // Given: NULL input
+    
+    // When
+    Value* result = value_exp(NULL);
+    
+    // Then
+    ASSERT_NULL(result);
+    return true;
+}
+
+bool test_value_exp_zero(void) {
+    // Given
+    Value* a = value_create(0.0);
+    
+    // When
+    Value* result = value_exp(a);
+    
+    // Then
+    ASSERT_NOT_NULL(result);
+    ASSERT_EQUAL_DOUBLE(1.0, result->data, 1e-15);
+    
+    value_destroy(a);
+    value_destroy(result);
+    return true;
+}
+
+bool test_value_exp_one(void) {
+    // Given
+    Value* a = value_create(1.0);
+    
+    // When
+    Value* result = value_exp(a);
+    
+    // Then
+    ASSERT_NOT_NULL(result);
+    ASSERT_EQUAL_DOUBLE(2.718281828459045, result->data, 1e-15);
+    
+    value_destroy(a);
+    value_destroy(result);
+    return true;
+}
+
+bool test_value_exp_negative_one(void) {
+    // Given
+    Value* a = value_create(-1.0);
+    
+    // When
+    Value* result = value_exp(a);
+    
+    // Then
+    ASSERT_NOT_NULL(result);
+    ASSERT_EQUAL_DOUBLE(0.3678794411714423, result->data, 1e-15);
+    
+    value_destroy(a);
+    value_destroy(result);
+    return true;
+}

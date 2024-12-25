@@ -88,6 +88,12 @@ void run_tests(TestStats* stats) {
     RUN_TEST(test_value_tanh_negative_input, stats);
     RUN_TEST(test_value_tanh_large_values, stats);
     RUN_TEST(test_value_tanh_chained_ops, stats);
+
+    RUN_TEST(test_value_exp_null_input, stats);
+    RUN_TEST(test_value_exp_zero, stats);
+    RUN_TEST(test_value_exp_one, stats);
+    RUN_TEST(test_value_exp_negative_one, stats);
+
 }
 int main(void) {
     TestStats stats = {0, 0, 0};

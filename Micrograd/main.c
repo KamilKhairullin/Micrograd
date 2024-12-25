@@ -32,7 +32,15 @@ int main(void) {
     Value* a = value_create_labled(3.0, "a");
     Value* b = value_add(a, a);
     b->label = "b";
-    backward(b);
-    value_vizualize_trace(b, 0, "");
+    backward( b);
+    value_vizualize_trace(b);
+
+//    Value* a = value_create_labled(-2.0, "a");
+//    Value* b = value_create_labled(3.0, "b");
+//    Value* d = value_mul(a, b); d->label = "d";
+//    Value* e = value_add(a, b); e->label = "e";
+//    Value* f = value_mul(d, e); f->label = "f";
+//    backward(f);
+//    value_vizualize_trace(f);
     return 0;
 }
