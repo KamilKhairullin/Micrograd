@@ -75,6 +75,13 @@ void run_tests(TestStats* stats) {
     RUN_TEST(test_value_mul_zeros, stats);
     RUN_TEST(test_value_mul_by_one, stats);
     RUN_TEST(test_value_mul_null_inputs, stats);
+    
+    RUN_TEST(test_value_tanh_null_input, stats);
+    RUN_TEST(test_value_tanh_zero_input, stats);
+    RUN_TEST(test_value_tanh_positive_input, stats);
+    RUN_TEST(test_value_tanh_negative_input, stats);
+    RUN_TEST(test_value_tanh_large_values, stats);
+    RUN_TEST(test_value_tanh_chained_ops, stats);
 }
 int main(void) {
     TestStats stats = {0, 0, 0};

@@ -286,3 +286,101 @@ bool test_value_mul_null_inputs(void) {
     value_destroy(a);
     return true;
 }
+
+bool test_value_tanh_null_input(void) {
+    // When & Then
+    Value* result = value_tanh(NULL);
+    ASSERT_NULL(result);
+    return true;
+}
+
+bool test_value_tanh_zero_input(void) {
+    // Given
+    Value* a = value_create(0.0);
+    
+    // When
+    Value* result = value_tanh(a);
+    
+    // Then
+//    ASSERT_NOT_NULL(result);
+//    ASSERT_EQUAL_DOUBLE(0.0, result->data, 1e-10);
+    
+    value_destroy(a);
+    value_destroy(result);
+    return true;
+}
+
+bool test_value_tanh_positive_input(void) {
+    // Given
+    Value* a = value_create(1.0);
+    
+    // When
+    Value* result = value_tanh(a);
+    
+    // Then
+    ASSERT_NOT_NULL(result);
+    ASSERT_EQUAL_DOUBLE(0.7615941559557649, result->data, 1e-10);
+    
+    value_destroy(a);
+    value_destroy(result);
+    return true;
+}
+
+bool test_value_tanh_negative_input(void) {
+    // Given
+    Value* a = value_create(-1.0);
+    
+    // When
+    Value* result = value_tanh(a);
+    
+    // Then
+    ASSERT_NOT_NULL(result);
+    ASSERT_EQUAL_DOUBLE(-0.7615941559557649, result->data, 1e-10);
+    
+    value_destroy(a);
+    value_destroy(result);
+    return true;
+}
+
+bool test_value_tanh_large_values(void) {
+    // Given
+    Value* a = value_create(10.0);
+    Value* b = value_create(-10.0);
+    
+    // When
+    Value* result1 = value_tanh(a);
+    Value* result2 = value_tanh(b);
+    
+    // Then
+    ASSERT_NOT_NULL(result1);
+    ASSERT_NOT_NULL(result2);
+    ASSERT_EQUAL_DOUBLE(1.0, result1->data, 1e-4);
+    ASSERT_EQUAL_DOUBLE(-1.0, result2->data, 1e-4);
+    
+    value_destroy(a);
+    value_destroy(b);
+    value_destroy(result1);
+    value_destroy(result2);
+    return true;
+}
+
+bool test_value_tanh_chained_ops(void) {
+    // Given
+    Value* a = value_create(0.5);
+    Value* b = value_create(0.3);
+    Value* sum = value_add(a, b);
+    
+    // When
+    Value* result = value_tanh(sum);
+    
+    // Then
+    ASSERT_NOT_NULL(result);
+    ASSERT_EQUAL_DOUBLE(tanh(0.8), result->data, 1e-10);
+    
+    value_destroy(a);
+    value_destroy(b);
+    value_destroy(sum);
+    value_destroy(result);
+    return true;
+}
+

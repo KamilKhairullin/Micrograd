@@ -24,4 +24,10 @@ bool test_value_mul_zeros(void);
 bool test_value_mul_by_one(void);
 bool test_value_mul_null_inputs(void);
 
+bool test_value_tanh_null_input(void);
+bool test_value_tanh_zero_input(void);
+bool test_value_tanh_positive_input(void);
+bool test_value_tanh_negative_input(void);
+bool test_value_tanh_large_values(void);
+bool test_value_tanh_chained_ops(void);
 #endif

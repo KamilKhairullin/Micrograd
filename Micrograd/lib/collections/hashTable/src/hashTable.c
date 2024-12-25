@@ -93,6 +93,7 @@ bool hashTable_resize(HashTable* hashTable) {
 
 bool hashTable_add(HashTable* hashTable, Value* value) {
     if (hashTable == NULL) return false;
+    if (value == NULL) return false;
     // check if resize needed
     double loadPercent = (double)(hashTable->size+1) / (double)hashTable->capacity;
     if(loadPercent > LOAD_FACTOR_THRESHOLD) {

@@ -11,6 +11,8 @@ int main(void) {
     Value* f = value_create_labled(-2.0, "f");
     Value* l = value_mul(d, f);
     l->label = "l";
-    value_vizualize_trace(l, 0, "");
+    Value* m = value_tanh(l);
+    m->label = "m"; 
+    value_vizualize_trace(m, 0, "");
     return 0;
 }
