@@ -14,28 +14,20 @@ Value* value_create(double data) {
     return newValue;
 }
 
+Value* value_create_labled(double data, char* label) {
+    Value* value = value_create(data);
+    value->label = label;
+    return value;
+}
+
 Value* value_create_alt(double data, Value* left, Value* right, char* operation) {
-    Value* newValue = (Value*) malloc (sizeof(Value));
+    Value* newValue = value_create(data);
     HashTable* set = hashTable_init();
     hashTable_add(set, left);
     hashTable_add(set, right);
     if (newValue != NULL) {
-        newValue->data = data;
         newValue->prev = set;
         newValue->operation = operation;
-        newValue->label = NULL;
-        newValue->grad = 0.0;
-    }
-    return newValue;
-}
-
-Value* value_create_labled(double data, char* label) {
-    Value* newValue = (Value*) malloc (sizeof(Value));
-    if (newValue != NULL) {
-        newValue->data = data;
-        newValue->prev = NULL;
-        newValue->operation = "";
-        newValue->label = label;
         newValue->grad = 0.0;
     }
     return newValue;
