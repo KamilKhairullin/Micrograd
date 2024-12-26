@@ -18,14 +18,16 @@ Neuron* neuron_create(size_t inputSize) {
 }
 
 void neuron_print(Neuron* n) {
+    printf("   bias: ");
     value_print(n->bias);
     for (size_t i = 0; i < n->inputSize; i++) {
+        printf("   weight_%zu: ", i);
         value_print(n->weights[i]);
     }
 }
 
 Value* neuron_call(Neuron* n, Value** x) {
-    Value* sum = n->bias;
+    Value* sum = value_create(n->bias->data);
 
     for (size_t i = 0; i < n->inputSize; i++) {
         Value* wixi = value_mul(n->weights[i], x[i]);

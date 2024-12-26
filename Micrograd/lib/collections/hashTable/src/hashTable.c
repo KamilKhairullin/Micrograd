@@ -214,7 +214,7 @@ void hashTable_print(HashTable* hashTable) {
 
 void hashTable_print_short(HashTable* hashTable) {
     if (hashTable == NULL) {
-        printf("Value(NULL)\n");
+        printf("{ }");
         return;
     }
     printf("{ ");
@@ -229,6 +229,6 @@ void hashTable_print_short(HashTable* hashTable) {
             }
         }
     }
-    printf("}\n");
+    printf("}");
 }
 

@@ -18,6 +18,7 @@
 		8E37CC472D1CCACC00B67AD6 /* neuron.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC462D1CCACC00B67AD6 /* neuron.c */; };
 		8E37CC4A2D1CCEDB00B67AD6 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC492D1CCEDB00B67AD6 /* utils.c */; };
 		8E37CC4D2D1CD8A300B67AD6 /* layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC4C2D1CD8A300B67AD6 /* layer.c */; };
+		8E37CC502D1D7F8600B67AD6 /* multiLayerPerceptron.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E37CC4F2D1D7F8600B67AD6 /* multiLayerPerceptron.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,6 +55,8 @@
 		8E37CC492D1CCEDB00B67AD6 /* utils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
 		8E37CC4B2D1CD8A300B67AD6 /* layer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = layer.h; sourceTree = "<group>"; };
 		8E37CC4C2D1CD8A300B67AD6 /* layer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = layer.c; sourceTree = "<group>"; };
+		8E37CC4E2D1D7F8600B67AD6 /* multiLayerPerceptron.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = multiLayerPerceptron.h; sourceTree = "<group>"; };
+		8E37CC4F2D1D7F8600B67AD6 /* multiLayerPerceptron.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = multiLayerPerceptron.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +109,8 @@
 				8E37CC492D1CCEDB00B67AD6 /* utils.c */,
 				8E37CC4B2D1CD8A300B67AD6 /* layer.h */,
 				8E37CC4C2D1CD8A300B67AD6 /* layer.c */,
+				8E37CC4E2D1D7F8600B67AD6 /* multiLayerPerceptron.h */,
+				8E37CC4F2D1D7F8600B67AD6 /* multiLayerPerceptron.c */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -248,6 +253,7 @@
 				8E37CC4A2D1CCEDB00B67AD6 /* utils.c in Sources */,
 				8E37CC1C2D1A009700B67AD6 /* Makefile in Sources */,
 				8E37CC152D19FE8200B67AD6 /* main.c in Sources */,
+				8E37CC502D1D7F8600B67AD6 /* multiLayerPerceptron.c in Sources */,
 				8E37CC252D1A1A6A00B67AD6 /* test_runner.c in Sources */,
 				8E37CC442D1CB6D200B67AD6 /* arrayList.c in Sources */,
 			);

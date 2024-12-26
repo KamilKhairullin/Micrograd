@@ -38,8 +38,9 @@ void value_print(Value* v) {
         printf("Value(NULL)\n");
         return;
     }
-    printf("Value(data=%.1f, operation=%s)\n", v->data, v->operation);
+    printf("Value(data=%.1f, operation=%s, prev=", v->data, v->operation);
     hashTable_print_short(v->prev);
+    printf(")\n");
 }
 
 Value* value_add(Value* a, Value* b) {
@@ -198,10 +199,10 @@ void __value_vizualize_trace(Value* value, int depth, char* prefix) {
     }
       
     if (value->prev != NULL) {
-        char* new_prefix = malloc(strlen(prefix) + 4);
+        char new_prefix[128 + 4 * depth];
         strcpy(new_prefix, prefix);
         strcat(new_prefix, "    ");
-        
+
         for (size_t i = 0; i < value->prev->capacity; i++) {
             Node* current = value->prev->buckets[i].head;
             while (current != NULL) {
@@ -210,7 +211,5 @@ void __value_vizualize_trace(Value* value, int depth, char* prefix) {
                 current = current->next;
             }
         }
-        
-        free(new_prefix);
     }
 }
