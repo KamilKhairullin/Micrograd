@@ -106,7 +106,6 @@ void backward(Value* v) {
     HashTable* visited = hashTable_init();
     build_topo(v, visited, topo);
     v->grad = 1.0;
-    printList(topo);
     for (int i = topo->size - 1; i >= 0; i--) {
         __backward(get(topo, i));
     }
