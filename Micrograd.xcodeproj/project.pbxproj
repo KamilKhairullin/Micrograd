@@ -57,6 +57,7 @@
 		8E37CC4C2D1CD8A300B67AD6 /* layer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = layer.c; sourceTree = "<group>"; };
 		8E37CC4E2D1D7F8600B67AD6 /* multiLayerPerceptron.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = multiLayerPerceptron.h; sourceTree = "<group>"; };
 		8E37CC4F2D1D7F8600B67AD6 /* multiLayerPerceptron.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = multiLayerPerceptron.c; sourceTree = "<group>"; };
+		8E37CC512D1DA82200B67AD6 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +92,7 @@
 			children = (
 				8E37CC1B2D1A009700B67AD6 /* Makefile */,
 				8E37CC142D19FE8200B67AD6 /* main.c */,
+				8E37CC512D1DA82200B67AD6 /* main.h */,
 				8E37CC2C2D1A3D8600B67AD6 /* lib */,
 				8E37CC212D1A11C000B67AD6 /* src */,
 				8E37CC222D1A130600B67AD6 /* test */,

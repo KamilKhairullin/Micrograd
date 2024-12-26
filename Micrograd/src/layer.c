@@ -28,3 +28,9 @@ void layer_print(Layer* l) {
         neuron_print(l->neurons[i]);
     }
 }
+
+void layer_params(Layer* l, ArrayList* list) {
+    for (size_t i = 0; i < l->neurons_size; i++) {
+        neuron_params(l->neurons[i], list);
+    }
+}

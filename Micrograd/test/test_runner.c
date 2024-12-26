@@ -95,10 +95,10 @@ void run_tests(TestStats* stats) {
     RUN_TEST(test_value_exp_negative_one, stats);
 
 }
-//int main(void) {
-//    TestStats stats = {0, 0, 0};
-//    run_tests(&stats);
-//    run_hashTable_tests(&stats);
-//    PRINT_SUMMARY(stats);
-//    return stats.failed > 0 ? 1 : 0;
-//}
+int main(void) {
+    TestStats stats = {0, 0, 0};
+    run_tests(&stats);
+    run_hashTable_tests(&stats);
+    PRINT_SUMMARY(stats);
+    return stats.failed > 0 ? 1 : 0;
+}

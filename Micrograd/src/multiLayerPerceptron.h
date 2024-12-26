@@ -16,4 +16,6 @@ void mlp_print(MultiLayerPerceptron* mlp);
 
 Value** mlp_call(MultiLayerPerceptron* mlp, Value** x);
 
+void mlp_params(MultiLayerPerceptron* m, ArrayList* list);
+
 #endif

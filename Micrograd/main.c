@@ -7,54 +7,85 @@
 #include "lib/collections/hashTable/src/hashTable.h"
 #include <time.h>
 
+Value* calculate_loss(Value** predicted, Value** desired, int size) {
+    Value* squareLoss = value_create(0);
+    for (int i = 0; i < size; i ++) {
+        Value* yout = predicted[i];
+        Value* ygt = desired[i];
+        Value* sub = value_sub(yout, ygt);
+        Value* squareLoss_i = value_power(sub, 2);
+        squareLoss = value_add(squareLoss, squareLoss_i);
+    }
+    return squareLoss;
+}
+
 int main(void) {
     srand((unsigned int)time(NULL));
-//    Value* x1 = value_create_labled(2.0, "x1");
-//    Value* x2 = value_create_labled(0.0, "x2");
-//    
-//    Value* w1 = value_create_labled(-3.0, "w1");
-//    Value* w2 = value_create_labled(1.0, "w2");
-//
-//    Value* b = value_create_labled(6.8813735870195432, "b");
-//    
-//    Value* x1w1 = value_mul(x1, w1);
-//    x1w1->label = "x1*w1";
-//    
-//    Value* x2w2 = value_mul(x2, w2);
-//    x2w2->label = "x2*w2";
-//    
-//    Value* x1w1x2w2 = value_add(x1w1, x2w2);
-//    x1w1x2w2->label = "x1*w1 + x2*w2";
-//    
-//    Value* n = value_add(x1w1x2w2, b);
-//    n->label = "n";
-//    
-//    Value* e = value_exp(value_mul_raw(n, 2));
-//    e->label = "e";
-//    Value* o = value_div(value_sub_raw(e, 1), value_add_raw(e, 1));
-//    o->label = "o";
-//    backward(o);
-//    value_vizualize_trace(o);
     
-    Value* x1 = value_create_labled(2.0, "x1");
-    Value* x2 = value_create_labled(3.0, "x2");
-    Value* x3 = value_create_labled(-1.0, "x3");
-    Value** x = malloc(sizeof(Value) * 3);
-    x[0] = x1;
-    x[1] = x2;
-    x[2] = x3;
-
+    int x_train_size = 3;
+    Value** x_train[] = {
+        (Value*[]){
+            value_create(2.0), value_create(3.0), value_create(-1.0)
+        },
+        (Value*[]){
+            value_create(3.0), value_create(-1.0), value_create(0.5)
+        },
+        (Value*[]){
+            value_create(0.5), value_create(1.0), value_create(1.0)
+        }
+    };
+    
+    Value* y_train[] = {
+        value_create(1.0), value_create(-1.0), value_create(-1.0), value_create(1.0)
+    };
+    
+    
+    size_t input_size = 3;
+    size_t layer_sizes[] = {3, 4, 4, 1};
     size_t number_of_layers = 4;
-    size_t* number_of_neurons_each_layer = malloc(sizeof(size_t) * number_of_layers);
-    number_of_neurons_each_layer[0] = 3;
-    number_of_neurons_each_layer[1] = 4;
-    number_of_neurons_each_layer[2] = 4;
-    number_of_neurons_each_layer[3] = 1;
+    MultiLayerPerceptron* mlp = mlp_create(input_size, layer_sizes, number_of_layers);
     
-    MultiLayerPerceptron* mlp = mlp_create(3, number_of_neurons_each_layer, number_of_layers);
-    Value* out = mlp_call(mlp, x)[0];
-    mlp_print(mlp);
-    backward(out);
-//    value_vizualize_trace(out);
-    return 0;
+    Value* y_predicted[4];
+    for (int i = 0; i < 4; i++) {
+        y_predicted[i] = value_create(0);
+    }
+    
+    for (size_t k = 0; k < 500; k++) {
+        // pass input and get prediction
+        // calculate backward
+        for (int i =0; i < x_train_size; i ++) {
+            Value* prediction = mlp_call(mlp, x_train[i])[0];
+            y_predicted[i] = prediction;
+        }
+        // get all parameters
+        ArrayList* list = createArrayList(1024);
+        mlp_params(mlp, list);
+
+        for (int i = 0; i < list->size; i++) {
+            Value* p = get(list, i);
+            p->grad = 0;
+        }
+        
+        Value* loss = calculate_loss(y_predicted, y_train, 4);
+        backward(loss);
+        value_print(loss);
+        
+        // tune params
+        for (int i = 0; i < list->size; i++) {
+            Value* p = get(list, i);
+            p->data += -0.05 * p->grad;
+        }
+    }
+    
+    printf("predictions: \n");
+    for (int i = 0; i < 4; i++) {
+        value_print(y_predicted[i]);
+    }
+
+    printf("real prediction: \n");
+    
+    Value* real_x[]= { value_create(1.0), value_create(1.0), value_create(-1.0) };
+    Value* realPrediction = mlp_call(mlp, &real_x[0])[0];
+    value_print(realPrediction);
 }
+

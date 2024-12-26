@@ -38,7 +38,7 @@ void value_print(Value* v) {
         printf("Value(NULL)\n");
         return;
     }
-    printf("Value(data=%.1f, operation=%s, prev=", v->data, v->operation);
+    printf("Value(data=%.15f, operation=%s, prev=", v->data, v->operation);
     hashTable_print_short(v->prev);
     printf(")\n");
 }

@@ -36,3 +36,10 @@ Value* neuron_call(Neuron* n, Value** x) {
     Value* out = value_tanh(sum);
     return out;
 }
+
+void neuron_params(Neuron* n, ArrayList* list) {
+    for (size_t i = 0; i < n->inputSize; i++) {
+        add(list, n->weights[i]);
+    }
+    add(list, n->bias);
+}

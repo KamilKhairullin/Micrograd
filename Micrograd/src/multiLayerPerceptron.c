@@ -29,3 +29,10 @@ Value** mlp_call(MultiLayerPerceptron* mlp, Value** x) {
     }
     return x;
 }
+
+void mlp_params(MultiLayerPerceptron* m, ArrayList* list) {
+    for (size_t i = 0; i < m->layers_width; i++) {
+        layer_params(m->layers[i], list);
+    }
+    return;
+}

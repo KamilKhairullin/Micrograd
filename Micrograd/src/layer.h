@@ -16,5 +16,6 @@ void layer_print(Layer* l);
 
 Value** layer_call(Layer* l, Value** x);
 
+void layer_params(Layer* l, ArrayList* list);
 #endif /* layer_h */
 
