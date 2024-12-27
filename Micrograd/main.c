@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include "value.h"
 #include "neuron.h"
 #include "layer.h"
@@ -22,35 +23,75 @@ Value* calculate_loss(Value** predicted, Value** desired, int size) {
 int main(void) {
     srand((unsigned int)time(NULL));
     
-    int x_train_size = 3;
+    int x_train_size = 12;
+    int y_train_size = x_train_size;
     Value** x_train[] = {
         (Value*[]){
-            value_create(2.0), value_create(3.0), value_create(-1.0)
+            value_create(0.4), value_create(0.6)
         },
         (Value*[]){
-            value_create(3.0), value_create(-1.0), value_create(0.5)
+            value_create(0.1), value_create(0.5)
         },
         (Value*[]){
-            value_create(0.5), value_create(1.0), value_create(1.0)
+            value_create(0.2), value_create(0.3)
+        },
+        (Value*[]){
+            value_create(0.5), value_create(0.2)
+        },
+        (Value*[]){
+            value_create(0.3), value_create(0.4)
+        },
+        (Value*[]){
+            value_create(0.1), value_create(0.2)
+        },
+        (Value*[]){
+            value_create(0.2), value_create(0.6)
+        },
+        (Value*[]){
+            value_create(0.3), value_create(0.6)
+        },
+        (Value*[]){
+            value_create(0.1), value_create(0.4)
+        },
+        (Value*[]){
+            value_create(0.4), value_create(0.5)
+        },
+        (Value*[]){
+            value_create(0.2), value_create(0.4)
+        },
+        (Value*[]){
+            value_create(0.1), value_create(0.6)
         }
     };
     
+    
     Value* y_train[] = {
-        value_create(1.0), value_create(-1.0), value_create(-1.0), value_create(1.0)
+        value_create(1),
+        value_create(0.6),
+        value_create(0.5),
+        value_create(0.7),
+        value_create(0.7),
+        value_create(0.3),
+        value_create(0.8),
+        value_create(0.9),
+        value_create(0.5),
+        value_create(0.9),
+        value_create(0.6),
+        value_create(0.7)
     };
     
     
-    size_t input_size = 3;
-    size_t layer_sizes[] = {3, 4, 4, 1};
+    size_t input_size = 2;
+    size_t layer_sizes[] = {2, 4, 4, 1};
     size_t number_of_layers = 4;
     MultiLayerPerceptron* mlp = mlp_create(input_size, layer_sizes, number_of_layers);
     
-    Value* y_predicted[4];
-    for (int i = 0; i < 4; i++) {
+    Value* y_predicted[y_train_size];
+    for (int i = 0; i < y_train_size; i++) {
         y_predicted[i] = value_create(0);
     }
     
-    for (size_t k = 0; k < 500; k++) {
+    for (size_t k = 0; k < 250; k++) {
         // pass input and get prediction
         // calculate backward
         for (int i =0; i < x_train_size; i ++) {
@@ -78,14 +119,43 @@ int main(void) {
     }
     
     printf("predictions: \n");
-    for (int i = 0; i < 4; i++) {
-        value_print(y_predicted[i]);
+    for (int i = 0; i < y_train_size; i++) {
+        printf("was");
+        printf(" %0.5f ", y_train[i] ->data);
+        printf("predicted");
+        printf("%0.5f \n", y_predicted[i] ->data);
     }
 
     printf("real prediction: \n");
     
-    Value* real_x[]= { value_create(1.0), value_create(1.0), value_create(-1.0) };
-    Value* realPrediction = mlp_call(mlp, &real_x[0])[0];
-    value_print(realPrediction);
+    Value** real_x[]= {
+        (Value*[]){
+            value_create(0.3), value_create(0.5)
+        },
+        (Value*[]){
+            value_create(0.1), value_create(0.3)
+        },
+        (Value*[]){
+            value_create(0.2), value_create(0.5)
+        },
+        (Value*[]){
+            value_create(0.17), value_create(0.13)
+        }
+    };
+    
+    Value* y_real[] = {
+        value_create(0.7),
+        value_create(0.4),
+        value_create(0.7),
+        value_create(0.3)
+    };
+    
+    for (int i = 0; i < 4; i++) {
+        Value* realPrediction = mlp_call(mlp, real_x[i])[0];
+        printf("was");
+        printf(" %0.5f ", y_real[i] ->data);
+        printf("predicted");
+        printf(" %0.5f \n", realPrediction->data);
+    }
 }
 
